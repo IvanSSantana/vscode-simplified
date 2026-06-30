@@ -1,6 +1,7 @@
 :root {
     --cor-fundo: #3f3c11;
     --cor-texto: #f5f5dc;
+    --cor-secao: #252008;
 }
 
 * { 
@@ -10,17 +11,17 @@
     box-sizing: border-box;
 }
 
-
 body, html {
     min-height: 100vh;
     background-color: #3f3c11;
     color: var(--cor-texto);
+    overflow: hidden;
 }
 
 header {
     display: flex;
     gap: 15px;
-    background-color: #252008;
+    background-color: var(--cor-secao);
     height: 1.75rem;
 }
 
@@ -49,4 +50,36 @@ header input {
 
 header input:focus {
     outline: none;
+}
+
+aside {
+    display: flex;
+    flex-direction: column;
+    gap: 1.7rem;
+    height: 100vh;
+    width: 4vw;
+    background-color: var(--cor-secao);
+    padding: 8px;
+}
+
+aside svg {
+    font-size: 1.5rem;
+    opacity: 0.5;
+    margin: 0 auto;
+}
+
+aside svg:hover {
+    opacity: 1;
+}
+
+main {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+#area-texto-codigo {
+    width: 97vw;
+    height: 100vh;
+    background-color: #3f3f1b;
+    color: white;
 }
