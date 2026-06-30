@@ -10,27 +10,28 @@ function abrirAbaArquivoListener() {
 };
 
 function criarNovoArquivoListener() {
-    let abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
+    const abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
+    const inputModal = document.getElementById("input-nome-arquivo");
+    const input = inputModal.querySelector("input");
 
-    if (abaOpcoesArquivo) {
-        abaOpcoesArquivo.addEventListener("click", (event) => {
-            const option = event.target.getAttribute("option");
+    abaOpcoesArquivo.addEventListener("click", (event) => {
+        if (event.target.getAttribute("option") === "novo-arquivo") {
+            inputModal.showModal();
+        }
+    });
 
-            if (option === "novo-arquivo") {
-                const inputNomeArquivoModal = document.querySelector("#input-nome-arquivo");
-                inputNomeArquivoModal.showModal();
+    input.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter")
+            return;
 
-                const inputNomeArquivo = inputNomeArquivoModal.querySelector("input[type='text']");
-                inputNomeArquivo.addEventListener("keydown", (event) => {
-                    if (event.key === "Enter") {
-                        const nomeArquivo = inputNomeArquivo.value.trim();
-                        criarArquivo(nomeArquivo);
-                    }
-                });
-            };
-        });
-    };
-};
+        criarArquivo(input.value.trim());
+
+        input.value = "";
+
+        inputModal.close();
+    });
+
+}
 
 function fecharAbaArquivoListener() {
     const abasArquivos = document.querySelector(".abas-arquivos");
