@@ -1,7 +1,7 @@
 :root {
     --cor-fundo: #3f3c11;
     --cor-texto: #f5f5dc;
-    --cor-secao: #252008;
+    --cor-secao: #383211;
 }
 
 * { 
@@ -53,7 +53,7 @@ header input:focus {
 }
 
 header img {
-    margin: 3px 10px 3px 15px;
+    margin: 3px 10px 3px 12px;
     height: 80%;
 }
 
@@ -83,6 +83,14 @@ main {
     flex-wrap: nowrap;
 }
 
+.abas-arquivos {
+    display: flex;
+    gap: 5px;
+    background-color: #221e0a;
+    height: 2rem;
+    width: 100vw;
+}
+
 .area-codigo textarea {
     width: 97vw;
     height: 100vh;
@@ -92,4 +100,53 @@ main {
 
 .area-codigo textarea:focus {
     outline: none;
+}
+
+#opcoes-aba-arquivo {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--cor-secao);
+    border-radius: 10px;
+    width: 200px;
+}
+
+
+#opcoes-aba-arquivo button {
+    background-color: transparent;
+    color: var(--cor-texto);
+    width: 100%;
+    height: 2rem;
+    margin: 5px 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+#opcoes-aba-arquivo button:hover {
+    background-color: #ffffff1a;
+}
+
+.arquivo {
+    background-color: #5a522a;
+    padding: 5px 10px;
+    margin: auto 0;
+}
+
+.arquivo:hover {
+    cursor: pointer;
+}
+
+.botao-fechar-arquivo {
+    background-color: transparent;
+    color: var(--cor-texto);
+    border-radius: 5px;
+    margin-left: 5px;
+    font-size: 0.8rem;
+    padding: 3px;
+}
+
+.botao-fechar-arquivo:hover {
+    background-color: #ffffff1a;
+    color: var(--cor-texto);
+    border-radius: 5px;
+    margin-left: 5px;
 }

@@ -10,12 +10,11 @@
 <body>
     <header>
         <img src="logo.svg" alt="Logo">
-        <button>Arquivo</button>
-        <button>Editar</button>
+        <button id="arquivo">Arquivo</button>
+        <button id="editar">Editar</button>
 
         <input type="text" value="nome-pasta">
     </header>
-
 
     <main>
         <aside>
@@ -30,6 +29,18 @@
         
     </main>
 
-    <script src="script.js"></script>
+    <dialog id="opcoes-aba-arquivo">
+        <button option="novo-arquivo">Novo Arquivo</button>
+        <button option="abrir-arquivo">Abrir Arquivo</button>
+        <button option="salvar">Salvar</button>
+        <button option="fechar-arquivo">Fechar Arquivo</button>
+    </dialog>
+
+    <dialog id="input-nome-arquivo">
+        <input type="text" placeholder="Digite o nome do arquivo...">
+    </dialog>
+
+    <script type="module" src="arquivo.js"></script>
+    <script type="module" src="listeners.js"></script>
 </body>
 </html>
