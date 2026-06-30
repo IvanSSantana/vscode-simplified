@@ -15,7 +15,7 @@ body, html {
     min-height: 100vh;
     background-color: #3f3c11;
     color: var(--cor-texto);
-    overflow: hidden;
+    overflow: hidden;  /* Bloqueia rolagem da página */
 }
 
 header {
@@ -52,6 +52,11 @@ header input:focus {
     outline: none;
 }
 
+header img {
+    margin: 3px 10px 3px 15px;
+    height: 80%;
+}
+
 aside {
     display: flex;
     flex-direction: column;
@@ -59,7 +64,8 @@ aside {
     height: 100vh;
     width: 4vw;
     background-color: var(--cor-secao);
-    padding: 8px;
+    padding: 12px 8px;
+    background-color: #5a522a;
 }
 
 aside svg {
@@ -77,9 +83,13 @@ main {
     flex-wrap: nowrap;
 }
 
-#area-texto-codigo {
+.area-codigo textarea {
     width: 97vw;
     height: 100vh;
     background-color: #3f3f1b;
     color: white;
+}
+
+.area-codigo textarea:focus {
+    outline: none;
 }
