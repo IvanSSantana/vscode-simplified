@@ -1,15 +1,16 @@
 :root {
-    --cor-fundo: #3f3c11;
-    --cor-texto: #f5f5dc;
-    --cor-secao: #383211;
-    --cor-botoes: #b39d2d;
-    --cor-secao-de-abas:#221e0a;
-    --cor-areacode: #3f3c11;
+    --cor-fundo: #b9af1d;
+    --cor-texto: #0a0a0a;
+    --cor-secao: #f0cc00;
+    --cor-botoes: #c1a100;
+    --cor-secao-de-abas:#3f3800;
+    --cor-areacode: #000000;
     --cor-hovers-buttons: #777749b0;
-    --cor-aside: #595027;
-    --cor-barradepesquisa: #87772e;
-}
-
+    --cor-aside: #f0cc00;
+    --cor-barradepesquisa: #c1a100;
+    --cor-texto-areacode: #fff4c0;
+    --cor-homestruck: #ecc900;
+    --cor-homestruck1: #3d3400a5;
 * {     
     margin: 0;
     padding: 0;
@@ -80,6 +81,7 @@ aside svg {
     font-size: 1.5rem;
     opacity: 0.5;
     margin: 0 auto;
+    background-color: var(--cor-icons);
 }
 
 aside svg:hover {
@@ -103,7 +105,7 @@ main {
     width: 97vw;
     height: 100vh;
     background-color: var(--cor-areacode);
-    color: var(--cor-texto)
+    color: var(--cor-texto-areacode)
 }
 
 .area-codigo textarea:focus {
@@ -117,21 +119,26 @@ dialog::backdrop {
 #opcoes-aba-arquivo {
     display: flex;
     flex-direction: column;
-    background-color: var(--cor-secao);
-    border-radius: 10px;
+    background-color: var(--cor-homestruck1);
+    border-radius: 5px;
     width: 200px;
     top: 25px;
-    
+    border: 10px;
+    border-color: #3f3800;
 }
 
 #opcoes-aba-arquivo button {
-    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--cor-homestruck);
     color: var(--cor-texto);
     width: 100%;
     height: 2rem;
     margin: 5px 10px;
     border-radius: 5px;
     width: 100%;
+    
 }
 
 #opcoes-aba-arquivo button:hover {
