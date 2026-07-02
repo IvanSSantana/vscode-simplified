@@ -10,7 +10,25 @@ class htmlLexer {
                   i++; // Como estamos analisando dois caracteres, precisamos avançar o índice em 1 para pegar o próximo caractere corretamente.
                } else {
                   tokens.push({ tipo: 'tag-abertura', valor: '<', inicio: i, fim: i });
-               }
+                  
+                  let tag = '';
+                  i++;
+                  while (i < input.length && input[i] !== ' ' && input !== '>') {
+                     tag += input[i];
+                     i++;
+                  };
+ 
+                  tokens.push({ tipo: 'tag', valor: tag, inicio: (tokens[-1].fim + 2), fim: inicio + tag.length });
+                  
+                  let atributo = '';
+                  i++;
+                  while (i < input.length && input[i] !== '=') {
+                     atributo += input[i];
+                     i++;
+                  };
+
+                  tokens.push({ tipo: 'atributo', valor: atributo, inicio: (tokens[-1].fim + 2), fim: inicio + atributo.length})
+               };
                break;
 
             case '>':
@@ -30,7 +48,7 @@ class htmlLexer {
                   i++;
                };
 
-               tokens.push({ tipo: 'string', valor, inicio: i - valor.length, fim: i });
+               tokens.push({ tipo: 'valor-atributo', valor, inicio: i - valor.length, fim: i });
                break;
 
             default:
@@ -41,8 +59,6 @@ class htmlLexer {
                   i++;
                };
                tokens.push({ tipo: 'texto', valor, inicio: i - valor.length, fim: i });
-
-               // TODO: Implementar a lógica para tags, atributos e outros casos, se necessário.
          };
       };
       return tokens;
