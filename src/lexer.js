@@ -63,4 +63,38 @@ class htmlLexer {
       };
       return tokens;
    };
+
+   static colorizer(tokens) {
+      for (let i = 0; i < tokens.length; i++) {
+         let codigo = document.createElement('p');
+         
+         switch (tokens[i].tipo) {
+            case 'tag-abertura':
+               codigo.classList = 'tag';
+               break;
+            
+            case 'tag-fechamento':
+               codigo.classList = 'tag';
+               break;
+
+            case 'tag':
+               codigo.classList = 'tag';
+               break;
+
+            case 'valor-atributo':
+               codigo.classList = 'atributo';
+               break;
+
+            case 'texto':
+               codigo.classList = 'texto';
+               break;
+
+            case 'igual':
+               codigo.classList = 'atributo';
+               break;
+         };
+
+         
+      };
+   }
 };
