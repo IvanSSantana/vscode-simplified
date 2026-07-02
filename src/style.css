@@ -2,9 +2,10 @@
     --cor-fundo: #3f3c11;
     --cor-texto: #f5f5dc;
     --cor-secao: #383211;
+    --cor-botoes: #b39d2d;
 }
 
-* { 
+* {     
     margin: 0;
     padding: 0;
     border: 0;
@@ -15,7 +16,7 @@ body, html {
     min-height: 100vh;
     background-color: #3f3c11;
     color: var(--cor-texto);
-    overflow: hidden;  /* Bloqueia rolagem da página */
+    /* overflow: hidden;  Bloqueia rolagem da página */
 }
 
 header {
@@ -28,7 +29,7 @@ header {
 header button {
     background-color: transparent;
     color: var(--cor-texto);
-    width: 5%;
+    width: 50px;
     height: 75%;
     margin: auto 0;
 }
@@ -43,6 +44,8 @@ header input {
     background-color: #6e6e3e;
     color: var(--cor-texto);
     height: 75%;
+    width: 60%;
+    max-width: 300px;
     margin: auto 0;
     border-radius: 5px;
     padding: 8px;
@@ -61,11 +64,11 @@ aside {
     display: flex;
     flex-direction: column;
     gap: 1.7rem;
-    height: 100vh;
-    width: 4vw;
+    min-height: 100vh;
+    width: 50px;
     background-color: var(--cor-secao);
     padding: 12px 8px;
-    background-color: #5a522a;
+    background-color: #595027;
 }
 
 aside svg {
@@ -102,14 +105,19 @@ main {
     outline: none;
 }
 
+dialog::backdrop {
+    display: none;
+}
+
 #opcoes-aba-arquivo {
     display: flex;
     flex-direction: column;
     background-color: var(--cor-secao);
     border-radius: 10px;
     width: 200px;
+    top: 25px;
+    
 }
-
 
 #opcoes-aba-arquivo button {
     background-color: transparent;
@@ -126,9 +134,23 @@ main {
 }
 
 .arquivo {
-    background-color: #5a522a;
+    background-color: var(--cor-botoes);;
     padding: 5px 10px;
     margin: auto 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.editar{
+    Background-color: var(--cor-botoes);;
+    padding: 5px 10px;
+    margin: auto 0;    
+}
+
+.nome-pasta{
+Background-color: var(--cor-botoes);;
+    padding: 5px 10px;
+    margin: auto 0;  
 }
 
 .arquivo:hover {
@@ -150,3 +172,8 @@ main {
     border-radius: 5px;
     margin-left: 5px;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
+
