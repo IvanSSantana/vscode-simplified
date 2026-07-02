@@ -60,6 +60,8 @@ function salvarArquivoListener() {
                 const nomeArquivo = JSON.parse(localStorage.getItem("arquivoAtual"))?.nome || [];
                 const conteudoArquivo = document.querySelector(".area-codigo textarea").value;
                 salvarArquivo(nomeArquivo, conteudoArquivo);
+
+                
             };
         });
     };   
