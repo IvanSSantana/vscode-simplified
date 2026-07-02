@@ -5,6 +5,7 @@ function abrirAbaArquivoListener() {
 
     abaArquivo.addEventListener("click", () => {
         let abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
+        abaOpcoesArquivo.style.display = "flex";
         abaOpcoesArquivo.showModal();
     });
 };
@@ -79,11 +80,24 @@ function selecionarArquivoAbaListener() {
     });
 };
 
+function criarNovoBodyListener(){
+    document.addEventListener("click", function(e) {
+        console.log(e.target.id);
+        const abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
+        let listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo']
+        if(!listaIdsIgnorar.includes(e.target.id)){
+            abaOpcoesArquivo.style.display = "none"
+            abaOpcoesArquivo.close();
+        }
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
 
     criarNovoArquivoListener();
+    criarNovoBodyListener();
     abrirAbaArquivoListener();
     fecharAbaArquivoListener();
     salvarArquivoListener();
