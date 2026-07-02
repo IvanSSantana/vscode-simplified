@@ -3,6 +3,11 @@
     --cor-texto: #f5f5dc;
     --cor-secao: #383211;
     --cor-botoes: #b39d2d;
+    --cor-secao-de-abas:#221e0a;
+    --cor-areacode: #3f3c11;
+    --cor-hovers-buttons: #777749b0;
+    --cor-aside: #595027;
+    --cor-barradepesquisa: #87772e;
 }
 
 * {     
@@ -35,13 +40,13 @@ header button {
 }
 
 header button:hover {
-    background-color: #777749b0;
+    background-color: var(--cor-hovers-buttons);
     color: var(--cor-texto);
     border-radius: 7px;
 }
 
 header input {
-    background-color: #6e6e3e;
+    background-color: var(--cor-barradepesquisa);
     color: var(--cor-texto);
     height: 75%;
     width: 60%;
@@ -68,7 +73,7 @@ aside {
     width: 50px;
     background-color: var(--cor-secao);
     padding: 12px 8px;
-    background-color: #595027;
+    background-color: var(--cor-aside)
 }
 
 aside svg {
@@ -89,7 +94,7 @@ main {
 .abas-arquivos {
     display: flex;
     gap: 5px;
-    background-color: #221e0a;
+    background-color: var(--cor-secao-de-abas);
     height: 2rem;
     width: 100vw;
 }
@@ -97,8 +102,8 @@ main {
 .area-codigo textarea {
     width: 97vw;
     height: 100vh;
-    background-color: #3f3f1b;
-    color: white;
+    background-color: var(--cor-areacode);
+    color: var(--cor-texto)
 }
 
 .area-codigo textarea:focus {
@@ -130,7 +135,7 @@ dialog::backdrop {
 }
 
 #opcoes-aba-arquivo button:hover {
-    background-color: #ffffff1a;
+    background-color: var(--cor-hovers-buttons)
 }
 
 .arquivo {
@@ -167,7 +172,7 @@ Background-color: var(--cor-botoes);;
 }
 
 .botao-fechar-arquivo:hover {
-    background-color: #ffffff1a;
+    background-color: var(--cor-hovers-buttons);
     color: var(--cor-texto);
     border-radius: 5px;
     margin-left: 5px;
