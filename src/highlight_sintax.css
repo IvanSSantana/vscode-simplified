@@ -1,14 +1,14 @@
 .tag {
-    color: greenyellow;
-};
+    color: yellow;
+}
 
 .atributo {
-    color: aquamarine;
-};
+    color: #6464e8;
+}
 
 .texto {
     color: white;
-};
+}
 
 .tag-abertura-fechamento {
     color: gray;

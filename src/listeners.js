@@ -1,4 +1,5 @@
 import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual } from "./arquivo.js";
+import { htmlLexer } from "./lexer.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -80,27 +81,60 @@ function selecionarArquivoAbaListener() {
     });
 };
 
-function criarNovoBodyListener(){
+function clicarForaOpcoesArquivoListener(){
     document.addEventListener("click", function(e) {
-        console.log(e.target.id);
         const abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
-        let listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo']
-        if(!listaIdsIgnorar.includes(e.target.id)){
-            abaOpcoesArquivo.style.display = "none"
-            abaOpcoesArquivo.close();
-        }
-    });
-}
+        let listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo'];
 
+        if(!listaIdsIgnorar.includes(e.target.id)){
+            abaOpcoesArquivo.style.display = "none";
+            abaOpcoesArquivo.close();
+        };
+    });
+};
+
+function clicarEnterCodigoListener() {
+    const areaCodigo = document.getElementById("codigo");
+
+    areaCodigo.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            const selection = window.getSelection();
+            const range = selection.getRangeAt(0);
+            const br = document.createElement("br");
+
+            range.deleteContents();
+            range.insertNode(br);
+
+            const novoRange = document.createRange();
+            novoRange.setStartAfter(br);
+            novoRange.collapse(true);
+
+            selection.removeAllRanges();
+            selection.addRange(novoRange);
+        };
+    });
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
 
     criarNovoArquivoListener();
-    criarNovoBodyListener();
+    clicarForaOpcoesArquivoListener();
     abrirAbaArquivoListener();
     fecharAbaArquivoListener();
     salvarArquivoListener();
     selecionarArquivoAbaListener();
+    clicarEnterCodigoListener();
+    
+    let areaCodigo = document.getElementById("codigo");
+    
+    areaCodigo.addEventListener("input", () => {
+        const nomeArquivo = JSON.parse(localStorage.getItem("arquivoAtual"))?.nome || [];
+        areaCodigo = document.getElementById("codigo");
+        const conteudoArquivo = areaCodigo.textContent;
+        htmlLexer.colorizer(htmlLexer.tokenizer(conteudoArquivo));
+    });
+    
 });
 

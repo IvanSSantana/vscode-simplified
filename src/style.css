@@ -94,14 +94,13 @@ main {
     width: 100vw;
 }
 
-.area-codigo textarea {
+.area-codigo #codigo {
     width: 97vw;
     height: 100vh;
     background-color: #3f3f1b;
-    color: white;
 }
 
-.area-codigo textarea:focus {
+.area-codigo #codigo:focus {
     outline: none;
 }
 

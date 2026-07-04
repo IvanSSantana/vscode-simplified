@@ -1,4 +1,4 @@
-class htmlLexer {
+export class htmlLexer {
    static tokenizer(input) {
       let tokens = [];
 
@@ -7,32 +7,65 @@ class htmlLexer {
             case '<':
                if (input[i + 1] === '/') {
                   tokens.push({ tipo: 'tag-fechamento', valor: '</', inicio: i, fim: i + 1 });
+                  
+                  let tag = '';
+                  i++;
+                  while (i < input.length && input[i] !== '>') {
+                     tag += input[i];
+                     i++;
+                  };
+                  
+                  if (tag.length > 0) {
+                     let inicio = tokens.at(-1).fim + 1; 
+                     tokens.push({ tipo: 'tag', valor: tag, inicio: inicio, fim: inicio + tag.length - 1 });
+                  }
+
+                  if (input[i] === '>') { i--; break; };
                   i++; // Como estamos analisando dois caracteres, precisamos avançar o índice em 1 para pegar o próximo caractere corretamente.
                } else {
                   tokens.push({ tipo: 'tag-abertura', valor: '<', inicio: i, fim: i });
                   
                   let tag = '';
                   i++;
-                  while (i < input.length && input[i] !== ' ' && input !== '>') {
+                  while (i < input.length && input[i].trim() !== '' && input[i] !== '>') {
                      tag += input[i];
                      i++;
                   };
- 
-                  tokens.push({ tipo: 'tag', valor: tag, inicio: (tokens[-1].fim + 2), fim: inicio + tag.length });
                   
+                  if (tag.length > 0) {
+                     let inicio = tokens.at(-1).fim + 1; 
+                     tokens.push({ tipo: 'tag', valor: tag, inicio: inicio, fim: inicio + tag.length - 1 });
+                  }
+
+                  if (input[i] === '>') { i--; break; };
+                  if (i < input.length && input[i].trim() === '' && i + 1 < input.length && input[i + 1].trim() !== '') {
+                     tokens.push({ tipo: 'espaco', valor: ' ', inicio: i, fim: i });
+                     i++;  
+                  }; 
+                  
+                  if (i < input.length && input[i] === '>' || input[i] === '/') { i--; break; };
+
                   let atributo = '';
-                  i++;
                   while (i < input.length && input[i] !== '=') {
                      atributo += input[i];
                      i++;
                   };
-
-                  tokens.push({ tipo: 'atributo', valor: atributo, inicio: (tokens[-1].fim + 2), fim: inicio + atributo.length})
+                  
+                  if (atributo.length > 0) {
+                     let inicio = tokens.at(-1).fim + 1;
+                     tokens.push({ tipo: 'atributo', valor: atributo, inicio: inicio, fim: inicio + atributo.length - 1 });
+                     i--;
+                  };
                };
                break;
 
             case '>':
-               tokens.push({ tipo: 'tag-fechamento', valor: '>', inicio: i, fim: i });
+               if (tokens.at(-1).valor === '/') {
+                  tokens.pop();
+                  tokens.push({ tipo: 'tag-fechamento', valor: '/>', inicio: i - 1, fim: i });
+               } else {
+                  tokens.push({ tipo: 'tag-fechamento', valor: '>', inicio: i, fim: i });
+               };
                break;
 
             case '=':
@@ -40,41 +73,54 @@ class htmlLexer {
                break;
 
             case '"':
-               let valor = '';
+               tokens.push({ tipo: 'aspas', valor: '"', inicio: i, fim: i });
                i++;
 
+               let valorAtributo = '';
+
                while (i < input.length && input[i] !== '"') {
-                  valor += input[i];
+                  valorAtributo += input[i];
                   i++;
                };
 
-               tokens.push({ tipo: 'valor-atributo', valor, inicio: i - valor.length, fim: i });
+               tokens.push({ tipo: 'valor-atributo', valor: valorAtributo, inicio: i - valorAtributo.length, fim: i });
+               tokens.push({ tipo: 'aspas', valor: '"', inicio: i, fim: i+1 });
+               break;
+
+            case "/":
+               tokens.push({ tipo: 'tag-fechamento', valor: '/', inicio: i, fim: i });
                break;
 
             default:
                let valor = '';
 
-               while (i < input.length && input[i] !== '<' && input[i] !== '>') {
+               while (i < input.length && input[i] !== '<') {
                   valor += input[i];
                   i++;
                };
+               
                tokens.push({ tipo: 'texto', valor, inicio: i - valor.length, fim: i });
+               if (i < input.length && input[i] === '<') { i--; break; };
          };
       };
+
       return tokens;
    };
 
    static colorizer(tokens) {
+      const container = document.getElementById('codigo');
+      let textoCodigo = []; 
+
       for (let i = 0; i < tokens.length; i++) {
-         let codigo = document.createElement('p');
-         
+         let codigo = document.createElement('span');
+
          switch (tokens[i].tipo) {
             case 'tag-abertura':
-               codigo.classList = 'tag';
+               codigo.classList = 'tag-abertura-fechamento';
                break;
             
             case 'tag-fechamento':
-               codigo.classList = 'tag';
+               codigo.classList = 'tag-abertura-fechamento';
                break;
 
             case 'tag':
@@ -92,9 +138,34 @@ class htmlLexer {
             case 'igual':
                codigo.classList = 'atributo';
                break;
+
+            case 'atributo':
+               codigo.classList = 'atributo';
+               break;
+
+            case 'espaco':
+               codigo.classList = 'texto';
+               break;
+            
+            case 'aspas':
+               codigo.classList = 'atributo';
+               break;
          };
 
-         
+         codigo.innerText = tokens[i].valor;
+         textoCodigo.push(codigo);
       };
-   }
+
+      container.replaceChildren();
+      container.innerHTML = '';
+      textoCodigo.forEach((p) => container.appendChild(p));
+
+      // Move o cursor para o final do conteúdo
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(container);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+   };
 };

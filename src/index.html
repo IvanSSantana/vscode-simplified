@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visual Web Code</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="highlight_sintax.css">
     <script src="https://kit.fontawesome.com/84cef182a4.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 </head>
@@ -17,16 +18,15 @@
         <input type="text" value="nome-pasta">
     </header>
 
-    <pao></pao>
     <main>
         <aside>
             <i class="fa-regular fa-file" title="TESTE"></i>
             <i class="fa-solid fa-magnifying-glass"></i>
         </aside>
-        <div></div>
+
         <section class="area-codigo">
             <section class="abas-arquivos"></section>
-            <textarea></textarea>
+            <div id="codigo" contenteditable="true"></div>
         </section>
     </main>
 
@@ -44,7 +44,8 @@
     <script type="module" src="arquivo.js"></script>
     <script type="module" src="listeners.js"></script>
     <script type="module" src="atalhos.js"></script>
-    <button id="pop-up" >Abrir pop-up</button>
+    <script type="module" src="utils.js"></script>
+    
     <div id="meu pop-up" class="pop-up-container">
         <div class="pop-up-conteudo">
             <h2>Arquivo Salvo</h2>
