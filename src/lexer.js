@@ -10,18 +10,19 @@ export class htmlLexer {
                   
                   let tag = '';
                   i++;
+                  i++;
                   while (i < input.length && input[i] !== '>') {
                      tag += input[i];
                      i++;
                   };
                   
-                  if (tag.length > 0) {
+                  if (tag !== '') {
                      let inicio = tokens.at(-1).fim + 1; 
                      tokens.push({ tipo: 'tag', valor: tag, inicio: inicio, fim: inicio + tag.length - 1 });
                   }
 
                   if (input[i] === '>') { i--; break; };
-                  i++; // Como estamos analisando dois caracteres, precisamos avançar o índice em 1 para pegar o próximo caractere corretamente.
+                  i++; 
                } else {
                   tokens.push({ tipo: 'tag-abertura', valor: '<', inicio: i, fim: i });
                   
