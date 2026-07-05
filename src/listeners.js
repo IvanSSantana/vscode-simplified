@@ -1,4 +1,4 @@
-import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual } from "./arquivo.js";
+import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 
 function abrirAbaArquivoListener() {
@@ -61,9 +61,7 @@ function salvarArquivoListener() {
             if (option === "salvar") {
                 const nomeArquivo = JSON.parse(localStorage.getItem("arquivoAtual"))?.nome || [];
                 const conteudoArquivo = document.querySelector(".area-codigo textarea").value;
-                salvarArquivo(nomeArquivo, conteudoArquivo);
-
-                
+                salvarArquivo(nomeArquivo, conteudoArquivo);  
             };
         });
     };   
@@ -71,20 +69,25 @@ function salvarArquivoListener() {
 
 function selecionarArquivoAbaListener() {
     const abasArquivos = document.querySelector(".abas-arquivos");
+    const areaCodigo = document.querySelector(".area-codigo textarea");
 
     abasArquivos.addEventListener("click", (event) => {
         if (!event.target.classList.contains("arquivo"))
             return;
 
         const nomeArquivo = event.target.textContent.slice(0, -1);
-        selecionarArquivoAtual(nomeArquivo);
+        const arquivoClicado = selecionarArquivoAtual(nomeArquivo);
+        
+        areaCodigo.value = arquivoClicado.conteudo;
+        const codigoArquivo = htmlLexer.tokenizer(arquivoClicado.conteudo);
+        htmlLexer.colorizer(codigoArquivo);
     });
 };
 
 function clicarForaOpcoesArquivoListener(){
     document.addEventListener("click", function(e) {
         const abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
-        let listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo'];
+        const listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo'];
 
         if(!listaIdsIgnorar.includes(e.target.id)){
             abaOpcoesArquivo.style.display = "none";
@@ -103,13 +106,17 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarArquivoListener();
     selecionarArquivoAbaListener();
     
+    const arquivoAtual = lerArquivoAtual();
+    const codigoArquivoAtual = htmlLexer.tokenizer(arquivoAtual.conteudo);
+    htmlLexer.colorizer(codigoArquivoAtual);
+    
     const areaCodigo = document.getElementById("codigo");
-
+    
     areaCodigo.addEventListener("input",()=>{
         const codigo = areaCodigo.value;
         const tokens = htmlLexer.tokenizer(codigo);
-
+        
         htmlLexer.colorizer(tokens);
     });
-});
 
+});

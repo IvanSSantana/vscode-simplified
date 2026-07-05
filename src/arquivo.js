@@ -48,11 +48,13 @@ export function removerArquivo(nomeArquivo) {
 export function salvarArquivo(nomeArquivo, conteudoArquivo) {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     const index = arquivos.findIndex(arquivo => arquivo.nome === nomeArquivo);
+
     Toastify({
         text: "Arquivo salvo com sucesso!",
         duration: 3000,
         position: "center"
     }).showToast();
+
     if (index !== -1) {
         arquivos[index].conteudo = conteudoArquivo;
         localStorage.setItem("arquivos", JSON.stringify(arquivos));
@@ -63,9 +65,11 @@ export function selecionarArquivoAtual(nomeArquivo) {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     const arquivoAtual = arquivos.find(arquivo => arquivo.nome === nomeArquivo);
     const arquivoAtualParaStorage = localStorage.setItem("arquivoAtual", JSON.stringify(arquivoAtual));
-    
-    const areaCodigo = document.querySelector(".area-codigo textarea");
-    areaCodigo.value = arquivoAtual.conteudo;
 
     return arquivoAtual;
+};
+
+export function lerArquivoAtual() {
+    const arquivoAtual = JSON.parse(localStorage.getItem("arquivoAtual")) || null;
+    return arquivoAtual ? arquivoAtual : null;
 };

@@ -21,7 +21,6 @@ function atalhoSalvarArquivo() {
     });
 };
 
-
 document.addEventListener("DOMContentLoaded", () => {
     atalhoNovoArquivo();
     atalhoSalvarArquivo();
