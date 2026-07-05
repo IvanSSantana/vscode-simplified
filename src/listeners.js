@@ -1,5 +1,6 @@
 import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
+import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -119,4 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
         htmlLexer.colorizer(tokens);
     });
 
+    atalhoNovoArquivo();
+    atalhoSalvarArquivo();
 });

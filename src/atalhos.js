@@ -1,27 +1,26 @@
-function atalhoNovoArquivo() {
-    document.addEventListener('keydown', (event) => {
-        if (event.shiftKey && event.key === 'n') {
-            event.preventDefault();
+import { salvarArquivo, lerArquivoAtual } from "./arquivo.js";
 
-            const inputModal = document.getElementById("input-nome-arquivo");
+export function atalhoNovoArquivo() {
+    const inputModal = document.getElementById("input-nome-arquivo");
+
+    document.addEventListener('keydown', (event) => {
+        if (inputModal.open) { return; };
+
+        if (event.shiftKey && event.code === "KeyN") {
+            event.preventDefault();
             inputModal.showModal();
         };
     });
 };
 
-function atalhoSalvarArquivo() {
+export function atalhoSalvarArquivo() {
     document.addEventListener('keydown', (event) => {
-        if (event.shiftKey && event.key === 's') {
+        if (event.shiftKey && event.code === "KeyS") {
             event.preventDefault();
 
-            const nomeArquivo = JSON.parse(localStorage.getItem("arquivoAtual"))?.nome || [];
+            const nomeArquivo = lerArquivoAtual().nome;
             const conteudoArquivo = document.querySelector(".area-codigo textarea").value;
             salvarArquivo(nomeArquivo, conteudoArquivo);    
         };
     });
 };
-
-document.addEventListener("DOMContentLoaded", () => {
-    atalhoNovoArquivo();
-    atalhoSalvarArquivo();
-});
