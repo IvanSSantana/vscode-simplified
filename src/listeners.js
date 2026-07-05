@@ -93,29 +93,6 @@ function clicarForaOpcoesArquivoListener(){
     });
 };
 
-function clicarEnterCodigoListener() {
-    const areaCodigo = document.getElementById("codigo");
-
-    areaCodigo.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            const selection = window.getSelection();
-            const range = selection.getRangeAt(0);
-            const br = document.createElement("br");
-
-            range.deleteContents();
-            range.insertNode(br);
-
-            const novoRange = document.createRange();
-            novoRange.setStartAfter(br);
-            novoRange.collapse(true);
-
-            selection.removeAllRanges();
-            selection.addRange(novoRange);
-        };
-    });
-};
-
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
 
@@ -125,16 +102,14 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharAbaArquivoListener();
     salvarArquivoListener();
     selecionarArquivoAbaListener();
-    clicarEnterCodigoListener();
     
-    let areaCodigo = document.getElementById("codigo");
-    
-    areaCodigo.addEventListener("input", () => {
-        const nomeArquivo = JSON.parse(localStorage.getItem("arquivoAtual"))?.nome || [];
-        areaCodigo = document.getElementById("codigo");
-        const conteudoArquivo = areaCodigo.textContent;
-        htmlLexer.colorizer(htmlLexer.tokenizer(conteudoArquivo));
+    const areaCodigo = document.getElementById("codigo");
+
+    areaCodigo.addEventListener("input",()=>{
+        const codigo = areaCodigo.value;
+        const tokens = htmlLexer.tokenizer(codigo);
+
+        htmlLexer.colorizer(tokens);
     });
-    
 });
 

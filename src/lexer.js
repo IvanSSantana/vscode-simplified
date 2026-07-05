@@ -39,6 +39,8 @@ export class htmlLexer {
                   }
 
                   if (input[i] === '>') { i--; break; };
+                  if (i < input.length && input[i] == '\n') { i--; break; };
+                  
                   if (i < input.length && input[i].trim() === '' && i + 1 < input.length && input[i + 1].trim() !== '') {
                      tokens.push({ tipo: 'espaco', valor: ' ', inicio: i, fim: i });
                      i++;  
@@ -61,7 +63,7 @@ export class htmlLexer {
                break;
 
             case '>':
-               if (tokens.at(-1).valor === '/') {
+               if (tokens.length > 0 && tokens.at(-1).valor === '/') {
                   tokens.pop();
                   tokens.push({ tipo: 'tag-fechamento', valor: '/>', inicio: i - 1, fim: i });
                } else {
@@ -84,8 +86,12 @@ export class htmlLexer {
                   i++;
                };
 
-               tokens.push({ tipo: 'valor-atributo', valor: valorAtributo, inicio: i - valorAtributo.length, fim: i });
-               tokens.push({ tipo: 'aspas', valor: '"', inicio: i, fim: i+1 });
+               if (valorAtributo.length > 0) {
+                  tokens.push({ tipo: 'valor-atributo', valor: valorAtributo, inicio: i - valorAtributo.length, fim: i });
+               };
+               if (i < input.length && input[i] === '"') {
+                  tokens.push({ tipo: 'aspas', valor: '"', inicio: i, fim: i });
+               };
                break;
 
             case "/":
@@ -109,7 +115,7 @@ export class htmlLexer {
    };
 
    static colorizer(tokens) {
-      const container = document.getElementById('codigo');
+      const container = document.getElementById('codigo-render');
       let textoCodigo = []; 
 
       for (let i = 0; i < tokens.length; i++) {
@@ -153,20 +159,12 @@ export class htmlLexer {
                break;
          };
 
-         codigo.innerText = tokens[i].valor;
+         codigo.textContent = tokens[i].valor;
          textoCodigo.push(codigo);
       };
 
       container.replaceChildren();
       container.innerHTML = '';
       textoCodigo.forEach((p) => container.appendChild(p));
-
-      // Move o cursor para o final do conteúdo
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(container);
-      range.collapse(false);
-      selection.removeAllRanges();
-      selection.addRange(range);
    };
 };

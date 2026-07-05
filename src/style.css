@@ -94,18 +94,41 @@ main {
     width: 100vw;
 }
 
-.area-codigo #codigo {
+.editor {
+    position: relative;
     width: 97vw;
     height: 100vh;
-    background-color: #3f3f1b;
 }
 
-.area-codigo #codigo:focus {
+#codigo, #codigo-render {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-family: Consolas, monospace;
+    font-size: 16px;
+    overflow: auto;
+    inset: 0; 
+}
+
+#codigo {
+    color: transparent;
+    background-color: transparent;
+    caret-color: white;
+    resize: none;
+    z-index: 1;
+}
+
+#codigo:focus {
     outline: none;
 }
 
+#codigo-render{
+    pointer-events: none; /* Remove a possibilidade do usuário digitar na área de renderização */
+    z-index: 2;
+}
+
 dialog::backdrop {
-    display: none;
+    display: none;  
 }
 
 #opcoes-aba-arquivo {
@@ -175,4 +198,3 @@ Background-color: var(--cor-botoes);;
 ::-webkit-scrollbar {
   display: none;
 }
-
