@@ -1,4 +1,13 @@
 export class htmlLexer {
+   
+   static sinaisReservados = ['<', '>', '/', '=', '"']
+   static estados = Object.freeze({
+      TAG_NAO_FECHADA: 0,
+      TAG_FECHADA: 1
+   });
+
+   static estadoAtual = this.estados.TAG_FECHADA;
+
    static tokenizer(input) {
       let tokens = [];
 
@@ -26,6 +35,8 @@ export class htmlLexer {
                } else {
                   tokens.push({ tipo: 'tag-abertura', valor: '<', inicio: i, fim: i });
                   
+                  this.estadoAtual = this.estados.TAG_NAO_FECHADA;
+                  
                   let tag = '';
                   i++;
                   while (i < input.length && input[i].trim() !== '' && input[i] !== '>') {
@@ -41,24 +52,13 @@ export class htmlLexer {
                   if (input[i] === '>') { i--; break; };
                   if (i < input.length && input[i] == '\n') { i--; break; };
                   
-                  if (i < input.length && input[i].trim() === '' && i + 1 < input.length && input[i + 1].trim() !== '') {
+                  if (i < input.length && input[i].trim() === '') {
                      tokens.push({ tipo: 'espaco', valor: ' ', inicio: i, fim: i });
                      i++;  
                   }; 
                   
                   if (i < input.length && input[i] === '>' || input[i] === '/') { i--; break; };
-
-                  let atributo = '';
-                  while (i < input.length && input[i] !== '=') {
-                     atributo += input[i];
-                     i++;
-                  };
-                  
-                  if (atributo.length > 0) {
-                     let inicio = tokens.at(-1).fim + 1;
-                     tokens.push({ tipo: 'atributo', valor: atributo, inicio: inicio, fim: inicio + atributo.length - 1 });
-                     i--;
-                  };
+                  i--;
                };
                break;
 
@@ -69,6 +69,7 @@ export class htmlLexer {
                } else {
                   tokens.push({ tipo: 'tag-fechamento', valor: '>', inicio: i, fim: i });
                };
+               this.estadoAtual = this.estados.TAG_FECHADA;
                break;
 
             case '=':
@@ -94,20 +95,37 @@ export class htmlLexer {
                };
                break;
 
-            case "/":
+            case '/':
                tokens.push({ tipo: 'tag-fechamento', valor: '/', inicio: i, fim: i });
                break;
 
+            case ' ':
+               tokens.push({ tipo: 'espaco', valor: ' ', inicio: i, fim: i });
+               break;
+            
             default:
                let valor = '';
-
-               while (i < input.length && input[i] !== '<') {
-                  valor += input[i];
-                  i++;
-               };
                
-               tokens.push({ tipo: 'texto', valor, inicio: i - valor.length, fim: i });
-               if (i < input.length && input[i] === '<') { i--; break; };
+               if (this.estadoAtual === this.estados.TAG_FECHADA) {
+                  while (i < input.length && input[i] !== '<') {
+                     valor += input[i];
+                     i++;
+                  };
+               } else {
+                  while (i < input.length && !this.sinaisReservados.includes(input[i]) && input[i] !== ' ') {
+                     valor += input[i];
+                     i++;
+                  };
+               }
+               
+               if (this.estadoAtual === this.estados.TAG_NAO_FECHADA) {
+                  tokens.push({ tipo: 'atributo', valor, inicio: i - valor.length, fim: i });
+               } else {
+                  tokens.push({ tipo: 'texto', valor, inicio: i - valor.length, fim: i });                  
+               };
+                
+               i--;
+               break;
          };
       };
 

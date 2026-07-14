@@ -40,14 +40,12 @@ function fecharAbaArquivoListener() {
     const abasArquivos = document.querySelector(".abas-arquivos");
 
    abasArquivos.addEventListener("click", (event) => {
-
-    if (!event.target.classList.contains("botao-fechar-arquivo"))
-        return; // Fallback para caso não clique em um dos botões de fechar arquivo
+        if (!event.target.classList.contains("botao-fechar-arquivo"))
+            return; 
 
         const nomeArquivo = event.target.parentElement.textContent.slice(0, -1);
 
         removerArquivo(nomeArquivo);
-
         event.target.parentElement.remove();
     });
 }

@@ -31,6 +31,7 @@ export function criarArquivo(nomeArquivo) {
     abaArquivo.replaceChildren(); // Limpa a lista de arquivos antes de adicionar novamente
 
     lerStorageArquivos();
+    selecionarArquivoAtual(nomeArquivo);
 
     return novoArquivo;
 };
