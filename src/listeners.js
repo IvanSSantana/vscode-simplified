@@ -1,4 +1,6 @@
-import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual } from "./arquivo.js";
+import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual } from "./arquivo.js";
+import { htmlLexer } from "./lexer.js";
+import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -38,14 +40,12 @@ function fecharAbaArquivoListener() {
     const abasArquivos = document.querySelector(".abas-arquivos");
 
    abasArquivos.addEventListener("click", (event) => {
-
-    if (!event.target.classList.contains("botao-fechar-arquivo"))
-        return; // Fallback para caso não clique em um dos botões de fechar arquivo
+        if (!event.target.classList.contains("botao-fechar-arquivo"))
+            return; 
 
         const nomeArquivo = event.target.parentElement.textContent.slice(0, -1);
 
         removerArquivo(nomeArquivo);
-
         event.target.parentElement.remove();
     });
 }
@@ -60,9 +60,7 @@ function salvarArquivoListener() {
             if (option === "salvar") {
                 const nomeArquivo = JSON.parse(localStorage.getItem("arquivoAtual"))?.nome || [];
                 const conteudoArquivo = document.querySelector(".area-codigo textarea").value;
-                salvarArquivo(nomeArquivo, conteudoArquivo);
-
-                
+                salvarArquivo(nomeArquivo, conteudoArquivo);  
             };
         });
     };   
@@ -70,37 +68,56 @@ function salvarArquivoListener() {
 
 function selecionarArquivoAbaListener() {
     const abasArquivos = document.querySelector(".abas-arquivos");
+    const areaCodigo = document.querySelector(".area-codigo textarea");
 
     abasArquivos.addEventListener("click", (event) => {
         if (!event.target.classList.contains("arquivo"))
             return;
 
         const nomeArquivo = event.target.textContent.slice(0, -1);
-        selecionarArquivoAtual(nomeArquivo);
+        const arquivoClicado = selecionarArquivoAtual(nomeArquivo);
+        
+        areaCodigo.value = arquivoClicado.conteudo;
+        const codigoArquivo = htmlLexer.tokenizer(arquivoClicado.conteudo);
+        htmlLexer.colorizer(codigoArquivo);
     });
 };
 
-function criarNovoBodyListener(){
+function clicarForaOpcoesArquivoListener(){
     document.addEventListener("click", function(e) {
-        console.log(e.target.id);
         const abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
-        let listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo']
-        if(!listaIdsIgnorar.includes(e.target.id)){
-            abaOpcoesArquivo.style.display = "none"
-            abaOpcoesArquivo.close();
-        }
-    });
-}
+        const listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo'];
 
+        if(!listaIdsIgnorar.includes(e.target.id)){
+            abaOpcoesArquivo.style.display = "none";
+            abaOpcoesArquivo.close();
+        };
+    });
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
 
     criarNovoArquivoListener();
-    criarNovoBodyListener();
+    clicarForaOpcoesArquivoListener();
     abrirAbaArquivoListener();
     fecharAbaArquivoListener();
     salvarArquivoListener();
     selecionarArquivoAbaListener();
-});
+    
+    const arquivoAtual = lerArquivoAtual();
+    const codigoArquivoAtual = htmlLexer.tokenizer(arquivoAtual.conteudo);
+    htmlLexer.colorizer(codigoArquivoAtual);
+    
+    const areaCodigo = document.getElementById("codigo");
+    
+    areaCodigo.addEventListener("input",()=>{
+        const codigo = areaCodigo.value;
+        const tokens = htmlLexer.tokenizer(codigo);
+        
+        htmlLexer.colorizer(tokens);
+    });
 
+    atalhoNovoArquivo();
+    atalhoSalvarArquivo();
+});
