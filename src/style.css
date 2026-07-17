@@ -8,7 +8,6 @@
     --cor-hovers-buttons: #777749b0;
     --cor-aside: #f0cc00;
     --cor-barradepesquisa: #c1a100;
-    --cor-texto-areacode: #fff4c0;
     --cor-homestruck: #ecc900;
     --cor-homestruck1: #3d3400a5;
 }
@@ -117,15 +116,14 @@ main {
     font-size: 16px;
     overflow: auto;
     inset: 0; 
-    background-color: var(--cor-areacode);
 }
 
 #codigo {
     color: transparent;
     background-color: transparent;
-    caret-color: white;
+    caret-color: white; 
     resize: none;
-    z-index: 1;
+    z-index: 2;
 }
 
 #codigo:focus {
@@ -134,7 +132,8 @@ main {
 
 #codigo-render{
     pointer-events: none; /* Remove a possibilidade do usuário digitar na área de renderização */
-    z-index: 2;
+    z-index: 1;
+    background-color: var(--cor-areacode);
 }
 
 dialog::backdrop {
