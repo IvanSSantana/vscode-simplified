@@ -140,7 +140,7 @@ dialog::backdrop {
     display: none;  
 }
 
-#opcoes-aba-arquivo {
+.opcoes-aba {
     display: flex;
     flex-direction: column;
     background-color: var(--cor-homestruck1);
@@ -151,10 +151,9 @@ dialog::backdrop {
     border-color: #3f3800;
 }
 
-#opcoes-aba-arquivo button {
+.opcoes-aba button {
     display: flex;
     align-items: center;
-    justify-content: center;
     background-color: var(--cor-homestruck);
     color: var(--cor-texto);
     width: 100%;
@@ -162,11 +161,15 @@ dialog::backdrop {
     margin: 5px 10px;
     border-radius: 5px;
     width: 100%;
-    
+    justify-content: space-evenly;
 }
 
-#opcoes-aba-arquivo button:hover {
+.opcoes-aba button:hover {
     background-color: var(--cor-hovers-buttons)
+}
+
+.atalho-abas-superiores {
+    color: #f9f9f9;
 }
 
 .arquivo {

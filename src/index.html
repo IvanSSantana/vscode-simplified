@@ -34,11 +34,18 @@
         </section>
     </main>
 
-    <dialog id="opcoes-aba-arquivo" style="display: none;">
+    <dialog id="opcoes-aba-arquivo" class="opcoes-aba" style="display: none;">
+        <button option="novo-arquivo">Novo Arquivo <p class="atalho-abas-superiores">Shift + N</p></button>
+        <button option="abrir-arquivo">Abrir Arquivo</button>
+        <button option="salvar">Salvar <p class="atalho-abas-superiores">Shift + S</p></button>
+        <button option="fechar-arquivo">Fechar Arquivo</button>
+    </dialog>
+
+    <dialog id="opcoes-aba-editar" class="opcoes-aba" style="display: none;">
         <button option="novo-arquivo">Novo Arquivo</button>
         <button option="abrir-arquivo">Abrir Arquivo</button>
-        <button option="salvar">Salvar</button>
-        <button option="fechar-arquivo">Fechar Arquivo</button>
+        <button option="salvar">Transformar Linha em Comentário</button>
+        <button option="fechar-arquivo">Transformar Bloco em Comentário</button>
     </dialog>
 
     <dialog id="input-nome-arquivo">
