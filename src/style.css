@@ -1,15 +1,17 @@
 :root {
     --cor-fundo: #b9af1d;
-    --cor-texto: #0a0a0a;
-    --cor-secao: #f0cc00;
-    --cor-botoes: #c1a100;
-    --cor-secao-de-abas:#3f3800;
-    --cor-areacode: #000000;
-    --cor-hovers-buttons: #777749b0;
-    --cor-aside: #f0cc00;
-    --cor-barradepesquisa: #c1a100;
-    --cor-homestruck: #ecc900;
-    --cor-homestruck1: #3d3400a5;
+    --cor-texto: #ffffff;
+    --cor-secao: #f1c13c;
+    --cor-botoes: #7e5200;
+    --cor-secao-de-abas:#3e2201;
+    --cor-areacode: #101010;
+    --cor-hovers-buttons: #99450044;
+    --cor-hovers-head: #4f372e;
+    --cor-aside: #f1c13c;
+    --cor-barradepesquisa: #c17f01;
+    --cor-homestruck: #aa5d1d;
+    --cor-homestruck1: #3e2201;
+    --cor-dialog: #4f372e;
 }
 
 * {     
@@ -37,14 +39,42 @@ header button {
     background-color: transparent;
     color: var(--cor-texto);
     width: 50px;
-    height: 75%;
-    margin: auto 0;
+    height: 100%;    
+    margin: 0;          
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}   
+
+header button::before{    
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--cor-hovers-buttons);
+    transition: all 0.09s ease;
+    z-index: -1;
 }
 
-header button:hover {
-    background-color: var(--cor-hovers-buttons);
+header button:hover::before{
+    top: 0;
+}
+
+
+header button:active::before {
+    background-color: var(--cor-hovers-head);
     color: var(--cor-texto);
-    border-radius: 7px;
+    background-color: var(--cor-barradepesquisa);
+    height: 28px;
+    position: relative;
+    overflow: hidden;
+}
+
+
+#arquivo{
+    z-index: 2;
 }
 
 header input {
@@ -83,6 +113,7 @@ aside svg {
     opacity: 0.5;
     margin: 0 auto;
     background-color: var(--cor-icons);
+    cursor: pointer;
 }
 
 aside svg:hover {
@@ -92,6 +123,10 @@ aside svg:hover {
 main {
     display: flex;
     flex-wrap: nowrap;
+}
+
+dialog::backdrop {
+    display: none;  
 }
 
 .abas-arquivos {
@@ -108,69 +143,6 @@ main {
     height: 100vh;
 }
 
-#codigo, #codigo-render {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    font-family: Consolas, monospace;
-    font-size: 16px;
-    overflow: auto;
-    inset: 0; 
-}
-
-#codigo {
-    color: transparent;
-    background-color: transparent;
-    caret-color: white; 
-    resize: none;
-    z-index: 2;
-}
-
-#codigo:focus {
-    outline: none;
-}
-
-#codigo-render{
-    pointer-events: none; /* Remove a possibilidade do usuário digitar na área de renderização */
-    z-index: 1;
-    background-color: var(--cor-areacode);
-}
-
-dialog::backdrop {
-    display: none;  
-}
-
-.opcoes-aba {
-    display: flex;
-    flex-direction: column;
-    background-color: var(--cor-homestruck1);
-    border-radius: 5px;
-    width: 200px;
-    top: 25px;
-    border: 10px;
-    border-color: #3f3800;
-}
-
-.opcoes-aba button {
-    display: flex;
-    align-items: center;
-    background-color: var(--cor-homestruck);
-    color: var(--cor-texto);
-    width: 100%;
-    height: 2rem;
-    margin: 5px 10px;
-    border-radius: 5px;
-    width: 100%;
-    justify-content: space-evenly;
-}
-
-.opcoes-aba button:hover {
-    background-color: var(--cor-hovers-buttons)
-}
-
-.atalho-abas-superiores {
-    color: #f9f9f9;
-}
 
 .arquivo {
     background-color: var(--cor-botoes);;
@@ -215,3 +187,98 @@ Background-color: var(--cor-botoes);;
 ::-webkit-scrollbar {
   display: none;
 }
+
+#logo:active{
+    transform: rotate(360deg);
+    transition: 1s;
+}
+
+#codigo, #codigo-render {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-family: Consolas, monospace;
+    font-size: 16px;
+    overflow: auto;
+    inset: 0; 
+}
+
+#codigo {
+    color: transparent;
+    background-color: transparent;
+    caret-color: white; 
+    resize: none;
+    z-index: 2;
+}
+
+#codigo:focus {
+    outline: none;
+}
+
+#codigo-render{
+    pointer-events: none; /* Remove a possibilidade do usuário digitar na área de renderização */
+    z-index: 1;
+    background-color: var(--cor-areacode);
+}
+
+
+#opcoes-aba-arquivo {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--cor-dialog);
+    border-radius: 5px;
+    width: 150px;
+    top: 25px;
+    border: 10px;
+    margin-left:60px;
+    border-color: #3f3800;
+}
+
+#opcoes-aba-arquivo button {
+/*Position Buttons*/
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    
+/*Color Buttons*/
+    background-color: var(--cor-dialog);
+    color: var(--cor-texto);
+    
+/* Size Buttons */
+    height: 20px;
+    width: 150px;
+
+/* Font Size Buttons */
+    font-size: 11px;
+
+/* Space Buttons*/
+    margin: 1px 3px;
+    padding: 2px;
+    border-radius: 5px;
+/**/
+    cursor: pointer;
+}
+
+
+#opcoes-aba-arquivo button:hover {
+    background-color: var(--cor-hovers-buttons);
+}
+
+#opcoes-aba-arquivo{
+    overflow-x: hidden;
+}
+
+#arquivo{
+   cursor: pointer;
+   position: relative;
+   overflow: hidden;
+}
+
+
+
+#editar{
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
