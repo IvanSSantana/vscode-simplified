@@ -11,7 +11,7 @@
 </head>
 <body>
     <header>
-        <img src="logo.svg" alt="Logo">
+        <img src="logo.svg" alt="Logo" class="Vlower">
         <button id="arquivo">Arquivo</button>
         <button id="editar">Editar</button>
 
@@ -35,9 +35,9 @@
     </main>
 
     <dialog id="opcoes-aba-arquivo" class="opcoes-aba" style="display: none;">
-        <button option="novo-arquivo">Novo Arquivo <p class="atalho-abas-superiores">Shift + N</p></button>
+        <button option="novo-arquivo">Novo Arquivo <p class="atalho-abas-superiores-novo-arquivo">Shift + N</p></button>
         <button option="abrir-arquivo">Abrir Arquivo</button>
-        <button option="salvar">Salvar <p class="atalho-abas-superiores">Shift + S</p></button>
+        <button option="salvar">Salvar <p class="atalho-abas-superiores-salvar">Shift + S</p></button>
         <button option="fechar-arquivo">Fechar Arquivo</button>
     </dialog>
 
@@ -49,7 +49,7 @@
     </dialog>
 
     <dialog id="input-nome-arquivo">
-        <input type="text" placeholder="Digite o nome do arquivo...">
+        <input type="text" placeholder="Digite o nome do arquivo..." class="texto-input" >
     </dialog>
 
     <script type="module" src="arquivo.js"></script>

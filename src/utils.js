@@ -1,4 +1,6 @@
-export function autoCompleteTag(tag) {
+-
+
+port function autoCompleteTag(tag) {
     switch (tag) {
         case '':
             break;

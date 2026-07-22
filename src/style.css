@@ -25,6 +25,7 @@ body, html {
     min-height: 100vh;
     background-color: #3f3c11;
     color: var(--cor-texto);
+
     /* overflow: hidden;  Bloqueia rolagem da página */
 }
 
@@ -33,6 +34,11 @@ header {
     gap: 15px;
     background-color: var(--cor-secao);
     height: 1.75rem;
+    caret-color: transparent;
+}
+
+input{
+    caret-color: white;
 }
 
 header button {
@@ -49,19 +55,20 @@ header button {
 header button::before{    
     content: "";
     position: absolute;
-    top: -100%;
+    top:  -100%;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: var(--cor-hovers-buttons);
     transition: all 0.09s ease;
+
     z-index: -1;
 }
 
 header button:hover::before{
-    top: 0;
+    top: 0;    
+    opacity: 90;
 }
-
 
 header button:active::before {
     background-color: var(--cor-hovers-head);
@@ -71,7 +78,6 @@ header button:active::before {
     position: relative;
     overflow: hidden;
 }
-
 
 #arquivo{
     z-index: 2;
@@ -135,6 +141,7 @@ dialog::backdrop {
     background-color: var(--cor-secao-de-abas);
     height: 2rem;
     width: 100vw;
+    caret-color: transparent;
 }
 
 .editor {
@@ -148,8 +155,7 @@ dialog::backdrop {
     background-color: var(--cor-botoes);;
     padding: 5px 10px;
     margin: auto 0;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    border-radius: 5px;
 }
 
 .editar{
@@ -184,13 +190,22 @@ Background-color: var(--cor-botoes);;
     margin-left: 5px;
 }
 
-::-webkit-scrollbar {
-  display: none;
+.atalho-abas-superiores-novo-arquivo{
+    display: flex;
+    margin-left: 30px;
 }
 
-#logo:active{
+.atalho-abas-superiores-salvar{
+    display: flex;
+    margin-left: 67px;
+}
+.Vlower:active{
     transform: rotate(360deg);
     transition: 1s;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
 
 #codigo, #codigo-render {
@@ -232,6 +247,7 @@ Background-color: var(--cor-botoes);;
     border: 10px;
     margin-left:60px;
     border-color: #3f3800;
+     caret-color: transparent;
 }
 
 #opcoes-aba-arquivo button {
@@ -274,11 +290,32 @@ Background-color: var(--cor-botoes);;
    overflow: hidden;
 }
 
-
-
 #editar{
     cursor: pointer;
     position: relative;
     overflow: hidden;
+}
+
+#input-nome-arquivo{
+    display: flex;
+
+    margin-left: 500px;
+    margin-top: 3px;
+
+    width: 190px;
+    height: 19px;
+
+    border: 2px 2px 0px #101010;
+    box-shadow: 2px 2px 0px #101010;
+
+    background-color: var(--cor-barradepesquisa);
+    color: var(--cor-texto);
+}
+
+.texto-input{
+    background-color: var(--cor-barradepesquisa);
+    color: #ffffff;
+    width: 190px;
+    height: 19px;
 }
 
