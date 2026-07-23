@@ -251,27 +251,17 @@ Background-color: var(--cor-botoes);;
 }
 
 #opcoes-aba-arquivo button {
-/*Position Buttons*/
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    
-/*Color Buttons*/
     background-color: var(--cor-dialog);
     color: var(--cor-texto);
-    
-/* Size Buttons */
     height: 20px;
     width: 150px;
-
-/* Font Size Buttons */
     font-size: 11px;
-
-/* Space Buttons*/
     margin: 1px 3px;
     padding: 2px;
     border-radius: 5px;
-/**/
     cursor: pointer;
 }
 
