@@ -313,9 +313,11 @@ Background-color: var(--cor-botoes);;
 }
 
 .texto-input{
+    margin-left: 2px;
     background-color: var(--cor-barradepesquisa);
     color: #ffffff;
     width: 190px;
     height: 19px;
+    outline: none;
 }
 
