@@ -142,7 +142,9 @@ export class htmlLexer {
       const container = document.getElementById('codigo-render');
       let textoCodigo = []; 
 
-      const SINAIS_TAGS = [tiposTokens.TAG_ABERTURA, tiposTokens.TAG_CONCLUSAO_ABERTURA, tiposTokens.TAG_CONCLUSAO_FECHAMENTO, tiposTokens.TAG_FECHAMENTO, tiposTokens.TAG_AUTOFECHAMENTO];
+      const SINAIS_TAGS = [tiposTokens.TAG_ABERTURA, tiposTokens.TAG_CONCLUSAO_ABERTURA, 
+         tiposTokens.TAG_CONCLUSAO_FECHAMENTO, tiposTokens.TAG_FECHAMENTO, tiposTokens.TAG_AUTOFECHAMENTO];
+
       const ATRIBUTOS = [tiposTokens.ATRIBUTO, tiposTokens.VALOR_ATRIBUTO, tiposTokens.ASPAS];
 
       for (let i = 0; i < tokens.length; i++) {
@@ -154,6 +156,8 @@ export class htmlLexer {
             codigo.classList = 'atributo';
          } else if (tokens[i].tipo === tiposTokens.TAG || tokens[i].tipo === tiposTokens.IGUAL) {
             codigo.classList = 'tag';
+         } else if (tokens[i].tipo === tiposTokens.ERRO) {
+            codigo.classList = 'erro';
          } else {
             codigo.classList = 'texto';
          };
@@ -165,5 +169,41 @@ export class htmlLexer {
       container.replaceChildren();
       container.innerHTML = '';
       textoCodigo.forEach((p) => container.appendChild(p));
+   };
+
+   static detectadorErros(tokens) {
+      for (let idxT = 0; idxT < tokens.length; idxT++) {
+         if (tokens[idxT].tipo === tiposTokens.TAG) {
+            let tag = tokens[idxT];
+
+            for (let i = 0; i < tag.valor.length; i++) {
+               if (this.sinaisReservados.includes(tag.valor[i])) {
+                  const primeiraParteNovaTagValor = tag.valor.slice(0, i - 1);
+
+                  if (i === tag.valor.length - 1) {
+                     var segundaParteNovaTagValor = tag.valor.slice(i);
+                  } else {
+                     var segundaParteNovaTagValor = tag.valor.slice(i);
+                     var terceiraParteNovaTagValor = tag.valor.slice(i + 1, tag.valor.length - 1);
+                  };
+                  
+                  tokens.splice(idxT, 1); // Removendo tag anômala
+                  
+                  const primeiraParteNovaTag = { tipo: tiposTokens.TAG, valor: primeiraParteNovaTagValor, inicio: tokens.at(-1).fim + 1, fim: tokens.at(-1).fim + 1 + primeiraParteNovaTagValor.length - 1 };
+                  const segundaParteNovaTag = { tipo: tiposTokens.ERRO, valor: segundaParteNovaTagValor, inicio: tokens.at(-1).fim + 1, fim: tokens.at(-1).fim + 1 + segundaParteNovaTagValor.length - 1 };
+                  
+                  tokens.splice(idxT, 0, primeiraParteNovaTag);
+                  tokens.splice(idxT + 1, 0, segundaParteNovaTag);
+                  
+                  if (terceiraParteNovaTagValor) {
+                     const terceiraParteNovaTag = { tipo: tiposTokens.TAG, valor: terceiraParteNovaTagValor, inicio: tokens.at(-1).fim + 1, fim: tokens.at(-1).fim + 1 + terceiraParteNovaTagValor.length - 1 };
+                     tokens.splice(idxT + 2, 0, terceiraParteNovaTag);
+                  };
+               };
+            };
+         }; 
+      };
+
+      return tokens;
    };
 };

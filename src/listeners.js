@@ -116,7 +116,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const codigo = areaCodigo.value;
         let tokens = htmlLexer.tokenizer(codigo);
         tokens = autoCompleteTag(tokens);
-                
+        tokens = htmlLexer.detectadorErros(tokens); 
+
         htmlLexer.colorizer(tokens);
     });
 

@@ -11,14 +11,12 @@ export const tiposTokens = Object.freeze({
       ATRIBUTO: 2,
       VALOR_ATRIBUTO: 3,
       TAG_CONCLUSAO_ABERTURA: 4,
-      TAG_CONCLUSAO_FECHAMENTO: 5
+      TAG_CONCLUSAO_FECHAMENTO: 5,
+      ERRO: 6,
 });
 
 export function autoCompleteTag(tokens) {
-    console.log("CHAMANDO AUTOCOMPLETE!");
-
     if (tokens.length > 0 && tokens.at(-1).tipo === tiposTokens.TAG_CONCLUSAO_ABERTURA) {
-        console.log("CAIU NO IF!")
         let tag = '';
 
         for (let i = tokens.length - 1; i >= 0; i--) {

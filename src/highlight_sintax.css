@@ -13,3 +13,8 @@
 .tag-abertura-fechamento {
     color: gray;
 }
+
+.erro {
+    color: #a00000;
+    text-decoration: underline;
+}
