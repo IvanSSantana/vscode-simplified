@@ -256,7 +256,7 @@ Background-color: var(--cor-botoes);;
     margin-left:60px;
     border-color: #3f3800;
     caret-color: transparent;
-    box-shadow: 8px 8px 0px var(--cor-secao);
+    box-shadow: 4px 4px var(--cor-secao);
 }
 
 #opcoes-aba-arquivo button {
@@ -320,4 +320,3 @@ Background-color: var(--cor-botoes);;
     height: 19px;
     outline: none;
 }
-
