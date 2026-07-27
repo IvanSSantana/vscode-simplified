@@ -192,13 +192,18 @@ Background-color: var(--cor-botoes);;
 
 .atalho-abas-superiores-novo-arquivo{
     display: flex;
-    margin-left: 30px;
+    margin-left: 13px;
 }
 
 .atalho-abas-superiores-salvar{
     display: flex;
-    margin-left: 67px;
+    margin-left: 75px;
 }
+
+.opcao-aba-novo-arquivo{
+    margin-top: 9px;
+}
+
 .Vlower:active{
     transform: rotate(360deg);
     transition: 1s;
@@ -242,7 +247,7 @@ Background-color: var(--cor-botoes);;
     flex-direction: column;
     background-color: var(--cor-dialog);
     border-radius: 5px;
-    width: 150px;
+    width: 220px;
     top: 25px;
     border: 10px;
     margin-left:60px;
@@ -256,9 +261,9 @@ Background-color: var(--cor-botoes);;
     justify-content: flex-start;
     background-color: var(--cor-dialog);
     color: var(--cor-texto);
-    height: 20px;
-    width: 150px;
-    font-size: 11px;
+    height: 40px;
+    width: 220px;
+    font-size: 20px;
     margin: 1px 3px;
     padding: 2px;
     border-radius: 5px;
