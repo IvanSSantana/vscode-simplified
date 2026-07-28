@@ -106,7 +106,7 @@ export class htmlLexer {
                break;
 
             case ' ':
-               tokens.push({ tipo: tiposTokens.BARRA, valor: ' ', inicio: i, fim: i });
+               tokens.push({ tipo: tiposTokens.ESPACO, valor: ' ', inicio: i, fim: i });
                break;
             
             default:
@@ -172,37 +172,39 @@ export class htmlLexer {
    };
 
    static detectadorErros(tokensRef) {
-      let tokens = [...tokensRef];
+      let tokens = [];
 
-      for (let idxT = 0; idxT < tokens.length; idxT++) {
-         if (tokens[idxT].tipo === tiposTokens.TAG) {
-            let tag = tokens[idxT];
+      for (let token of tokensRef) {
+         if (token.tipo !== tiposTokens.TAG) {
+            tokens.push(token);
+            continue;
+         };
 
-            for (let i = 0; i < tag.valor.length; i++) {
-               if (this.sinaisReservados.includes(tag.valor[i])) {
-                  const primeiraParteNovaTagValor = tag.valor.slice(0, i);
-                  const segundaParteNovaTagValor = tag.valor.slice(i, i + 1);
+         let novoValorTag = "";
 
-                  if (i !== tag.valor.length - 1) {
-                     var terceiraParteNovaTagValor = tag.valor.slice(i + 1, tag.valor.length);
-                  };
-                  
-                  tokens.splice(idxT, 1); // Removendo tag anômala
-                  
-                  const primeiraParteNovaTag = { tipo: tiposTokens.TAG, valor: primeiraParteNovaTagValor, inicio: tokens.at(-1).fim + 1, fim: tokens.at(-1).fim + 1 + primeiraParteNovaTagValor.length - 1 };
-                  const segundaParteNovaTag = { tipo: tiposTokens.ERRO, valor: segundaParteNovaTagValor, inicio: tokens.at(-1).fim + 1, fim: tokens.at(-1).fim + 1 + segundaParteNovaTagValor.length - 1 };
-                  
-                  tokens.splice(idxT, 0, primeiraParteNovaTag);
-                  tokens.splice(idxT + 1, 0, segundaParteNovaTag);
-                  
-                  if (terceiraParteNovaTagValor) {
-                     const terceiraParteNovaTag = { tipo: tiposTokens.TAG, valor: terceiraParteNovaTagValor, inicio: tokens.at(-1).fim + 1, fim: tokens.at(-1).fim + 1 + terceiraParteNovaTagValor.length - 1 };
-                     tokens.splice(idxT + 2, 0, terceiraParteNovaTag);
-                     // Bug encontrado: loop fica infinito e esse if está caindo sempre aqui.
-                  };
-               };
+         for (let i = 0; i < token.valor.length; i++) {
+
+            if (!this.sinaisReservados.includes(token.valor[i])) {
+               novoValorTag += token.valor[i];
+               continue;
             };
-         }; 
+
+            if (novoValorTag.length > 0) {
+               tokens.push({ tipo: tiposTokens.TAG, valor: novoValorTag, inicio: token.inicio, fim: token.inicio + novoValorTag.length });
+               novoValorTag = "";
+            };
+
+            tokens.push({ tipo: tiposTokens.ERRO, valor: token.valor[i], inicio: tokens.at(-1).inicio + 1, fim: tokens.at(-1).fim + 1 });
+         };
+
+         if (novoValorTag.length > 0) {
+            tokens.push({
+               tipo: tiposTokens.TAG,
+               valor: novoValorTag,
+               inicio: tokens.at(-1).inicio + 1,
+               fim: tokens.at(-1).fim + novoValorTag.length
+            });
+         }
       };
 
       return tokens;
