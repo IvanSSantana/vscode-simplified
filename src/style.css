@@ -244,7 +244,6 @@ Background-color: var(--cor-botoes);;
     background-color: var(--cor-areacode);
 }
 
-
 #opcoes-aba-arquivo {
     display: flex;
     flex-direction: column;

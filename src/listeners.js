@@ -20,11 +20,18 @@ function criarNovoArquivoListener() {
 
     abaOpcoesArquivo.addEventListener("click", (event) => {
         if (event.target.getAttribute("option") === "novo-arquivo") {
+            inputModal.style.display = "flex";
             inputModal.showModal();
         }
     });
 
     input.addEventListener("keydown", (event) => {
+        if (event.key === 'Escape')
+        {
+            inputModal.close();
+            inputModal.style.display = 'none';
+        };
+
         if (event.key !== "Enter")
             return;
 
@@ -33,6 +40,7 @@ function criarNovoArquivoListener() {
         input.value = "";
 
         inputModal.close();
+        inputModal.style.display = 'none';
     });
 
 }
@@ -96,6 +104,17 @@ function clicarForaOpcoesArquivoListener(){
     });
 };
 
+function clicarForaInputNomeNovoArquivoListener() {
+    const inputNomeNovoArquivoModal = document.getElementById('input-nome-arquivo');
+
+    inputNomeNovoArquivoModal.addEventListener('focusout', (event) => {
+        if (!inputNomeNovoArquivoModal.contains(event.relatedTarget)) {
+            inputNomeNovoArquivoModal.close();
+            inputNomeNovoArquivoModal.style.display = 'none';
+        };
+    });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
 
@@ -105,6 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     fecharAbaArquivoListener();
     salvarArquivoListener();
     selecionarArquivoAbaListener();
+    clicarForaInputNomeNovoArquivoListener();
     
     const arquivoAtual = lerArquivoAtual();
     const codigoArquivoAtual = htmlLexer.tokenizer(arquivoAtual.conteudo);
