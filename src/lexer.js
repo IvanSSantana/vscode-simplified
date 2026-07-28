@@ -171,20 +171,20 @@ export class htmlLexer {
       textoCodigo.forEach((p) => container.appendChild(p));
    };
 
-   static detectadorErros(tokens) {
+   static detectadorErros(tokensRef) {
+      let tokens = [...tokensRef];
+
       for (let idxT = 0; idxT < tokens.length; idxT++) {
          if (tokens[idxT].tipo === tiposTokens.TAG) {
             let tag = tokens[idxT];
 
             for (let i = 0; i < tag.valor.length; i++) {
                if (this.sinaisReservados.includes(tag.valor[i])) {
-                  const primeiraParteNovaTagValor = tag.valor.slice(0, i - 1);
+                  const primeiraParteNovaTagValor = tag.valor.slice(0, i);
+                  const segundaParteNovaTagValor = tag.valor.slice(i, i + 1);
 
-                  if (i === tag.valor.length - 1) {
-                     var segundaParteNovaTagValor = tag.valor.slice(i);
-                  } else {
-                     var segundaParteNovaTagValor = tag.valor.slice(i);
-                     var terceiraParteNovaTagValor = tag.valor.slice(i + 1, tag.valor.length - 1);
+                  if (i !== tag.valor.length - 1) {
+                     var terceiraParteNovaTagValor = tag.valor.slice(i + 1, tag.valor.length);
                   };
                   
                   tokens.splice(idxT, 1); // Removendo tag anômala
@@ -198,6 +198,7 @@ export class htmlLexer {
                   if (terceiraParteNovaTagValor) {
                      const terceiraParteNovaTag = { tipo: tiposTokens.TAG, valor: terceiraParteNovaTagValor, inicio: tokens.at(-1).fim + 1, fim: tokens.at(-1).fim + 1 + terceiraParteNovaTagValor.length - 1 };
                      tokens.splice(idxT + 2, 0, terceiraParteNovaTag);
+                     // Bug encontrado: loop fica infinito e esse if está caindo sempre aqui.
                   };
                };
             };

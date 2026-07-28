@@ -42,3 +42,14 @@ export function autoCompleteTag(tokens) {
 
     return tokens;
 };
+
+export function atualizarTextArea(tokens) {
+    let codigoStr = '';
+
+    tokens.forEach(token => {
+        codigoStr += token.valor
+    });
+
+    const textAreaCodigo = document.getElementById('codigo');
+    textAreaCodigo.value = codigoStr;
+};

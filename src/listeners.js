@@ -1,7 +1,7 @@
 import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
-import { autoCompleteTag } from "./utils.js";
+import { autoCompleteTag, atualizarTextArea } from "./utils.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -115,10 +115,14 @@ document.addEventListener("DOMContentLoaded", () => {
     areaCodigo.addEventListener("input",()=>{
         const codigo = areaCodigo.value;
         let tokens = htmlLexer.tokenizer(codigo);
-        tokens = autoCompleteTag(tokens);
-        tokens = htmlLexer.detectadorErros(tokens); 
+        let tokensPosErros = htmlLexer.detectadorErros(tokens); 
 
-        htmlLexer.colorizer(tokens);
+        if (JSON.stringify(tokensPosErros) === JSON.stringify(tokens)) {
+            tokensPosErros = autoCompleteTag(tokens);
+        };
+
+        atualizarTextArea(tokensPosErros);
+        htmlLexer.colorizer(tokensPosErros);
     });
 
     atalhoNovoArquivo();
