@@ -1,0 +1,44 @@
+:root {
+    --cor-fundo: #b9af1d;
+    --cor-texto: #ffffff;
+    --cor-secao: #f1c13c;
+    --cor-botoes: #7e5200;
+    --cor-secao-de-abas:#3e2201;
+    --cor-areacode: #101010;
+    --cor-hovers-buttons: #99450044;
+    --cor-hovers-head: #4f372e;
+    --cor-aside: #f1c13c;
+    --cor-barradepesquisa: #c17f01;
+    --cor-homestruck: #aa5d1d;
+    --cor-homestruck1: #3e2201;
+    --cor-dialog: #4f372e;
+}
+
+*{
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
+    box-sizing: border-box;
+}
+
+.logo{
+    display: flex;
+    width: 800px;
+    height: 620px;
+    margin-left: 40px;
+}
+
+body{
+    background-color: var(--cor-dialog);
+}
+
+aside{
+    display: flex;
+    flex-direction: column;
+    gap: 1.7rem;
+    min-height: 100vh;
+    width: 50px;
+    background-color: var(--cor-secao);
+    padding: 12px 8px;
+    background-color: var(--cor-aside)
+}

@@ -165,7 +165,7 @@ dialog::backdrop {
 }
 
 .nome-pasta{
-Background-color: var(--cor-botoes);;
+    Background-color: var(--cor-botoes);;
     padding: 5px 10px;
     margin: auto 0;  
 }
@@ -194,7 +194,6 @@ Background-color: var(--cor-botoes);;
     display: flex;
     margin-left: 60px;
     color: var(--cor-secao);
-
 }
 
 .atalho-abas-superiores-salvar{
