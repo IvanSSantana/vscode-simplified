@@ -322,3 +322,7 @@ input[type="file"]::file-selector-button {
 .botao-selecionar-arquivo button {
     position: absolute;
 }
+
+#codigo-preview {
+    z-index: 6;
+}
