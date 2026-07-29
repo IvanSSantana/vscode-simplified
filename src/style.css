@@ -320,3 +320,10 @@ Background-color: var(--cor-botoes);;
     height: 19px;
     outline: none;
 }
+
+#inicio {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    position-area: center;
+} 
