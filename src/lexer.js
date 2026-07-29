@@ -198,13 +198,8 @@ export class htmlLexer {
          };
 
          if (novoValorTag.length > 0) {
-            tokens.push({
-               tipo: tiposTokens.TAG,
-               valor: novoValorTag,
-               inicio: tokens.at(-1).inicio + 1,
-               fim: tokens.at(-1).fim + novoValorTag.length
-            });
-         }
+            tokens.push({ tipo: tiposTokens.TAG, valor: novoValorTag, inicio: tokens.at(-1).inicio + 1, fim: tokens.at(-1).fim + novoValorTag.length });
+         };
       };
 
       return tokens;

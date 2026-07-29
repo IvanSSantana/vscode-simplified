@@ -74,7 +74,3 @@ export function lerArquivoAtual() {
     const arquivoAtual = JSON.parse(localStorage.getItem("arquivoAtual")) || null;
     return arquivoAtual ? arquivoAtual : null;
 };
-
-export function abrirArquivo() {
-        
-};

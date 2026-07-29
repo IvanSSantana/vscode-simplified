@@ -53,3 +53,15 @@ export function atualizarTextArea(tokens) {
     const textAreaCodigo = document.getElementById('codigo');
     textAreaCodigo.value = codigoStr;
 };
+
+export function atualizarCodigoRenderizado(codigoStr, lexer) {
+    let tokens = lexer.tokenizer(codigoStr);
+    let tokensPosErros = lexer.detectadorErros(tokens); 
+
+    if (JSON.stringify(tokensPosErros) === JSON.stringify(tokens)) {
+        tokensPosErros = autoCompleteTag(tokens);
+    };
+
+    atualizarTextArea(tokensPosErros);
+    lexer.colorizer(tokensPosErros);
+}

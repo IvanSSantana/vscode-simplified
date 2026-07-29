@@ -1,7 +1,7 @@
 import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
-import { autoCompleteTag, atualizarTextArea } from "./utils.js";
+import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado } from "./utils.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -86,9 +86,10 @@ function selecionarArquivoAbaListener() {
         const nomeArquivo = event.target.textContent.slice(0, -1);
         const arquivoClicado = selecionarArquivoAtual(nomeArquivo);
         
-        areaCodigo.value = arquivoClicado.conteudo;
-        const codigoArquivo = htmlLexer.tokenizer(arquivoClicado.conteudo);
-        htmlLexer.colorizer(codigoArquivo);
+        if (!arquivoClicado.conteudo) return;
+
+        atualizarTextArea(htmlLexer.tokenizer(arquivoClicado.conteudo));
+        atualizarCodigoRenderizado(arquivoClicado.conteudo, htmlLexer);
     });
 };
 
@@ -115,6 +116,26 @@ function clicarForaInputNomeNovoArquivoListener() {
     });
 };
 
+function abrirArquivoListener() {
+    const inputArquivo = document.getElementById('input-arquivo');
+
+    inputArquivo.addEventListener('change', (e) => {
+        const arquivo = e.target.files[0];
+        let conteudoArquivo = '';
+
+        if (!arquivo) return;
+
+        const leitor = new FileReader();
+        
+        leitor.onload = function(eventoLeitor) {
+            conteudoArquivo = eventoLeitor.target.result;
+            atualizarTextArea(htmlLexer.tokenizer(conteudoArquivo));
+            atualizarCodigoRenderizado(conteudoArquivo, htmlLexer);
+        };
+        leitor.readAsText(arquivo);
+    });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
 
@@ -125,24 +146,15 @@ document.addEventListener("DOMContentLoaded", () => {
     salvarArquivoListener();
     selecionarArquivoAbaListener();
     clicarForaInputNomeNovoArquivoListener();
+    abrirArquivoListener();
     
     const arquivoAtual = lerArquivoAtual();
-    const codigoArquivoAtual = htmlLexer.tokenizer(arquivoAtual.conteudo);
-    htmlLexer.colorizer(codigoArquivoAtual);
+    const codigoArquivoAtual = atualizarCodigoRenderizado(arquivoAtual.conteudo, htmlLexer);
     
     const areaCodigo = document.getElementById("codigo");
-    
-    areaCodigo.addEventListener("input",()=>{
+    areaCodigo.addEventListener("input", () => {
         const codigo = areaCodigo.value;
-        let tokens = htmlLexer.tokenizer(codigo);
-        let tokensPosErros = htmlLexer.detectadorErros(tokens); 
-
-        if (JSON.stringify(tokensPosErros) === JSON.stringify(tokens)) {
-            tokensPosErros = autoCompleteTag(tokens);
-        };
-
-        atualizarTextArea(tokensPosErros);
-        htmlLexer.colorizer(tokensPosErros);
+        atualizarCodigoRenderizado(codigo, htmlLexer);
     });
 
     atalhoNovoArquivo();
