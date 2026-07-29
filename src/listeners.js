@@ -136,6 +136,16 @@ function abrirArquivoListener() {
     });
 };
 
+function rodarCodigoPreviewListener() {
+    const botaoPlay = document.getElementById('play-codigo');
+    const iframe = document.getElementById("codigo-preview");
+
+    botaoPlay.addEventListener('click', () => {
+        let codigo = document.getElementById('codigo');
+        iframe.srcdoc = codigo.value;
+    });
+};
+
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
 
@@ -147,6 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     selecionarArquivoAbaListener();
     clicarForaInputNomeNovoArquivoListener();
     abrirArquivoListener();
+    rodarCodigoPreviewListener();
     
     const arquivoAtual = lerArquivoAtual();
     const codigoArquivoAtual = atualizarCodigoRenderizado(arquivoAtual.conteudo, htmlLexer);
