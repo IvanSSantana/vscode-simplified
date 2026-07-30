@@ -1,7 +1,7 @@
 import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
-import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado } from "./utils.js";
+import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado, criarNovaAbaPreview } from "./utils.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -139,10 +139,11 @@ function abrirArquivoListener() {
 function rodarCodigoPreviewListener() {
     const botaoPlay = document.getElementById('play-codigo');
     const iframe = document.getElementById("codigo-preview");
-
+    
     botaoPlay.addEventListener('click', () => {
         let codigo = document.getElementById('codigo');
-        iframe.srcdoc = codigo.value;
+        iframe.srcdoc = codigo.value; // Faz o parser do HTML
+        let novaAba = criarNovaAbaPreview(`${lerArquivoAtual.nome}.play`);
     });
 };
 

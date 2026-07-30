@@ -1,3 +1,5 @@
+import { lerArquivoAtual } from "./arquivo.js";
+
 export const tiposTokens = Object.freeze({
       TAG_ABERTURA: '<',
       TAG_FECHAMENTO: '</',
@@ -65,3 +67,36 @@ export function atualizarCodigoRenderizado(codigoStr, lexer) {
     atualizarTextArea(tokens);
     lexer.colorizer(tokens);
 }
+
+export function criarNovaAbaPreview() {
+    // Modificando a aba
+    const abaArquivo = document.querySelector(".abas-arquivos");
+
+    const abaPreview = document.createElement("span");
+    abaPreview.classList.add("arquivo");
+    abaPreview.textContent = lerArquivoAtual().nome + " - preview";
+
+    const botaoFecharAba = document.createElement("button");
+    botaoFecharAba.textContent = "X";
+    botaoFecharAba.classList.add("botao-fechar-arquivo");
+
+    abaPreview.appendChild(botaoFecharAba);
+    abaArquivo.appendChild(abaPreview);
+
+    // Modificando a área de exibição
+    const areaExibicao = document.getElementById('codigo-preview');
+    const areaCodigo = document.getElementById('codigo');
+    const areaCodigoRenderizado = document.getElementById('codigo-render');
+
+    areaCodigo.style.pointerEvents = 'none';
+    areaCodigo.style.display = 'none';
+    areaCodigo.value = '';
+
+    areaCodigoRenderizado.style.display = 'none';
+
+    areaExibicao.style.display = 'flex';
+
+    // TODO: Lógica para voltar/parar + mudar botão de run
+    // TODO: Ao voltar/parar a execução, as estilizações devem voltar como estavam antes
+
+};
