@@ -35,16 +35,6 @@ body{
     background-color: var(--cor-dialog);
 }
 
-aside{
-    display: flex;
-    flex-direction: column;
-    gap: 1.7rem;
-    min-height: 100vh;
-    width: 50px;
-    background-color: var(--cor-secao);
-    padding: 12px 8px;
-    background-color: var(--cor-aside)
-}
 
 main{
     display: flex;
@@ -136,11 +126,7 @@ main button:active::before {
     background-color: var(--cor-hovers-head);
     color: var(--cor-texto);
     background-color: var(--cor-barradepesquisa);
-    
-    position: relative;
     overflow: hidden;
-
-    
 }
 
 #arquivo{
@@ -283,8 +269,8 @@ dialog::backdrop {
     padding-right: 5px;
     padding-left: 4px;
     cursor: pointer;
-    height: 55px;
-    width: 190px;
+    height: 50px;
+    width: 90%;
     font-size: 20px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif  ;
     padding-left: 14px;
