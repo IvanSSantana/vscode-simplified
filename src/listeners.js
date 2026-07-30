@@ -164,9 +164,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const codigoArquivoAtual = atualizarCodigoRenderizado(arquivoAtual.conteudo, htmlLexer);
     
     const areaCodigo = document.getElementById("codigo");
+    const areaRenderizacao = document.getElementById("codigo-render");
+
     areaCodigo.addEventListener("input", () => {
         const codigo = areaCodigo.value;
         atualizarCodigoRenderizado(codigo, htmlLexer);
+    });
+
+    areaCodigo.addEventListener("scroll", () => {
+        areaRenderizacao.scrollTop = codigo.scrollTop;
+        render.scrollLeft = codigo.scrollLeft;
     });
 
     atalhoNovoArquivo();
