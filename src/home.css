@@ -129,6 +129,7 @@ main button::before{
 main button:hover::before{
     left: 0;    
     opacity: 90;
+    
 }
 
 main button:active::before {
@@ -138,6 +139,8 @@ main button:active::before {
     
     position: relative;
     overflow: hidden;
+
+    
 }
 
 #arquivo{
@@ -274,10 +277,14 @@ dialog::backdrop {
 
 #botoes button{
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    justify-content: start;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 5px;
+    padding-left: 4px;
+    cursor: pointer;
     height: 55px;
+    width: 190px;
     font-size: 20px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif  ;
     padding-left: 14px;
@@ -291,5 +298,9 @@ dialog::backdrop {
     justify-content: center;
     gap: 15px;
     width: 300px;
-    
+    padding-right: 10px;
+}
+
+svg{
+    padding-left: 6px;
 }
