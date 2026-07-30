@@ -1,4 +1,4 @@
-import { lerArquivoAtual } from "./arquivo.js";
+import { lerArquivoAtual, definirEstadoPreview, selecionarArquivoAtual } from "./arquivo.js";
 
 export const tiposTokens = Object.freeze({
       TAG_ABERTURA: '<',
@@ -75,6 +75,7 @@ export function criarNovaAbaPreview() {
     const abaPreview = document.createElement("span");
     abaPreview.classList.add("arquivo");
     abaPreview.textContent = lerArquivoAtual().nome + " - preview";
+    abaPreview.id = 'botao-aba-preview';
 
     const botaoFecharAba = document.createElement("button");
     botaoFecharAba.textContent = "X";
@@ -96,7 +97,30 @@ export function criarNovaAbaPreview() {
 
     areaExibicao.style.display = 'flex';
 
+    definirEstadoPreview(true);
+
     // TODO: Lógica para voltar/parar + mudar botão de run
     // TODO: Ao voltar/parar a execução, as estilizações devem voltar como estavam antes
 
+};
+
+export function fecharAbaPreview() {
+    const botaoAbaPreview = document.getElementById('botao-aba-preview');
+    const areaCodigo = document.getElementById('codigo');
+    const areaCodigoRenderizado = document.getElementById('codigo-render');
+    const areaExibicao = document.getElementById('codigo-preview');
+
+    botaoAbaPreview.remove();
+
+    areaCodigo.style.pointerEvents = 'auto';
+    areaCodigo.style.display = 'flex';
+
+    const arquivoAtual = selecionarArquivoAtual();
+    areaCodigo.value = arquivoAtual.conteudo;
+
+    areaCodigoRenderizado.style.display = 'flex';
+
+    areaExibicao.style.display = 'none';
+
+    definirEstadoPreview(false);
 };

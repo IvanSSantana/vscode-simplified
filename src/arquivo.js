@@ -74,3 +74,15 @@ export function lerArquivoAtual() {
     const arquivoAtual = JSON.parse(localStorage.getItem("arquivoAtual")) || null;
     return arquivoAtual ? arquivoAtual : null;
 };
+
+export function definirEstadoPreview(rodando) {
+    const localStorageDb = JSON.parse(localStorage.getItem("previewRodando")) || [];
+    const estadoAtual = { rodandoPreview: rodando };
+    localStorageDb[0] = (estadoAtual);
+    localStorage.setItem("previewRodando", JSON.stringify(localStorageDb));
+}
+
+export function lerEstadoAtualPreview() {
+    const localStorageDb = JSON.parse(localStorage.getItem("previewRodando")) || [];
+    return localStorageDb[0].rodandoPreview || false;
+}

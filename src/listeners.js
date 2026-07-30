@@ -1,7 +1,7 @@
-import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual } from "./arquivo.js";
+import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual, lerEstadoAtualPreview, definirEstadoPreview } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
-import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado, criarNovaAbaPreview } from "./utils.js";
+import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado, criarNovaAbaPreview, fecharAbaPreview } from "./utils.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -143,12 +143,22 @@ function rodarCodigoPreviewListener() {
     botaoPlay.addEventListener('click', () => {
         let codigo = document.getElementById('codigo');
         iframe.srcdoc = codigo.value; // Faz o parser do HTML
-        let novaAba = criarNovaAbaPreview(`${lerArquivoAtual.nome}.play`);
+        
+        if (!!lerEstadoAtualPreview()) {
+            console.log("BUGZÂO")
+            fecharAbaPreview();
+            botaoPlay.firstElementChild.setAttribute('data-prefix', 'far');
+            return;
+        };
+
+        criarNovaAbaPreview();
+        botaoPlay.firstElementChild.setAttribute('data-prefix', 'fas');
     });
 };
 
 document.addEventListener("DOMContentLoaded", () => {
     lerStorageArquivos();
+    definirEstadoPreview(false);
 
     criarNovoArquivoListener();
     clicarForaOpcoesArquivoListener();
