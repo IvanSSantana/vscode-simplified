@@ -1,4 +1,4 @@
-export function lerStorageArquivos() {
+export function renderizarArquivos() {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     const abaArquivo = document.querySelector(".abas-arquivos");
 
@@ -30,8 +30,8 @@ export function criarArquivo(nomeArquivo) {
     const abaArquivo = document.querySelector(".abas-arquivos");
     abaArquivo.replaceChildren(); // Limpa a lista de arquivos antes de adicionar novamente
 
-    lerStorageArquivos();
-    selecionarArquivoAtual(nomeArquivo);
+    renderizarArquivos();
+    definirArquivoAtual(nomeArquivo);
 
     return novoArquivo;
 };
@@ -62,7 +62,7 @@ export function salvarArquivo(nomeArquivo, conteudoArquivo) {
     };
 };
 
-export function selecionarArquivoAtual(nomeArquivo) {
+export function definirArquivoAtual(nomeArquivo) {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     const arquivoAtual = arquivos.find(arquivo => arquivo.nome === nomeArquivo);
     const arquivoAtualParaStorage = localStorage.setItem("arquivoAtual", JSON.stringify(arquivoAtual));
@@ -80,9 +80,37 @@ export function definirEstadoPreview(rodando) {
     const estadoAtual = { rodandoPreview: rodando };
     localStorageDb[0] = (estadoAtual);
     localStorage.setItem("previewRodando", JSON.stringify(localStorageDb));
-}
+};
 
 export function lerEstadoAtualPreview() {
     const localStorageDb = JSON.parse(localStorage.getItem("previewRodando")) || [];
     return localStorageDb[0].rodandoPreview || false;
-}
+};
+
+export function lerArquivo(nomeArquivo) {
+    const arquivosDb = JSON.parse(localStorage.getItem("arquivos")) || [];
+    const arquivo = arquivosDb.find(arquivo => arquivo.nome === nomeArquivo);
+    return arquivo || null;
+};
+
+export function filtrarArquivosPorTextoContido(texto) {
+
+};
+
+export function salvarCodigoPreview(codigoStr) {
+    const localStorageDb = JSON.parse(localStorage.getItem("codigoPreview")) || [];
+    const codigoPreview = { codigoPreview: codigoStr };
+    localStorageDb[0] = (codigoPreview);
+    localStorage.setItem("codigoPreview", JSON.stringify(localStorageDb));
+};
+
+export function lerCodigoPreview() {
+    const localStorageDb = JSON.parse(localStorage.getItem("codigoPreview")) || [];
+    return localStorageDb[0].codigoPreview;
+};
+
+export function deletarCodigoPreview() {
+    const localStorageDb = JSON.parse(localStorage.getItem("codigoPreview")) || [];
+    localStorageDb.pop();
+    localStorage.setItem("codigoPreview", JSON.stringify(localStorageDb));
+};

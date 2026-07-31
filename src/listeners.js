@@ -1,7 +1,7 @@
-import { criarArquivo, lerStorageArquivos, removerArquivo, salvarArquivo, selecionarArquivoAtual, lerArquivoAtual, lerEstadoAtualPreview, definirEstadoPreview } from "./arquivo.js";
+import { criarArquivo, renderizarArquivos, removerArquivo, salvarArquivo, definirArquivoAtual, lerArquivoAtual, lerEstadoAtualPreview, definirEstadoPreview, salvarCodigoPreview, lerCodigoPreview, deletarCodigoPreview } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
-import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado, criarNovaAbaPreview, fecharAbaPreview } from "./utils.js";
+import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado, criarNovaAbaPreview, fecharAbaPreview, selecionarAbaPreview, sairAbaPreview } from "./utils.js";
 
 function abrirAbaArquivoListener() {
     const abaArquivo = document.getElementById("arquivo");
@@ -54,6 +54,14 @@ function fecharAbaArquivoListener() {
 
         const nomeArquivo = event.target.parentElement.textContent.slice(0, -1);
 
+        if (!!event.target.parentElement.classList.contains('preview')) {
+            const botaoPlay = document.getElementById('play-codigo');
+            fecharAbaPreview();
+            deletarCodigoPreview();
+            botaoPlay.firstElementChild.setAttribute('data-prefix', 'far');
+            return;
+        };
+
         removerArquivo(nomeArquivo);
         event.target.parentElement.remove();
     });
@@ -80,11 +88,23 @@ function selecionarArquivoAbaListener() {
     const areaCodigo = document.querySelector(".area-codigo textarea");
 
     abasArquivos.addEventListener("click", (event) => {
+        if (!!event.target.classList.contains('preview')) {
+            selecionarAbaPreview();
+            const codigo = lerCodigoPreview();
+            const iframe = document.getElementById("codigo-preview");
+            iframe.srcdoc = codigo; // Faz o parser do HTML
+            return;
+        };
+        
         if (!event.target.classList.contains("arquivo"))
             return;
 
+        if (!!lerEstadoAtualPreview()) {
+            sairAbaPreview();
+        };
+
         const nomeArquivo = event.target.textContent.slice(0, -1);
-        const arquivoClicado = selecionarArquivoAtual(nomeArquivo);
+        const arquivoClicado = definirArquivoAtual(nomeArquivo);
         
         if (!arquivoClicado.conteudo) return;
 
@@ -142,11 +162,12 @@ function rodarCodigoPreviewListener() {
     
     botaoPlay.addEventListener('click', () => {
         let codigo = document.getElementById('codigo');
+        salvarCodigoPreview(codigo.value);
         iframe.srcdoc = codigo.value; // Faz o parser do HTML
         
         if (!!lerEstadoAtualPreview()) {
-            console.log("BUGZÂO")
             fecharAbaPreview();
+            deletarCodigoPreview();
             botaoPlay.firstElementChild.setAttribute('data-prefix', 'far');
             return;
         };
@@ -157,7 +178,7 @@ function rodarCodigoPreviewListener() {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    lerStorageArquivos();
+    renderizarArquivos();
     definirEstadoPreview(false);
 
     criarNovoArquivoListener();

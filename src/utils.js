@@ -1,4 +1,4 @@
-import { lerArquivoAtual, definirEstadoPreview, selecionarArquivoAtual } from "./arquivo.js";
+import { lerArquivoAtual, definirEstadoPreview, definirArquivoAtual, lerArquivo, lerEstadoAtualPreview } from "./arquivo.js";
 
 export const tiposTokens = Object.freeze({
       TAG_ABERTURA: '<',
@@ -69,11 +69,13 @@ export function atualizarCodigoRenderizado(codigoStr, lexer) {
 }
 
 export function criarNovaAbaPreview() {
+    if (!!lerEstadoAtualPreview()) return;
+
     // Modificando a aba
     const abaArquivo = document.querySelector(".abas-arquivos");
 
     const abaPreview = document.createElement("span");
-    abaPreview.classList.add("arquivo");
+    abaPreview.classList.add("preview");
     abaPreview.textContent = lerArquivoAtual().nome + " - preview";
     abaPreview.id = 'botao-aba-preview';
 
@@ -98,10 +100,6 @@ export function criarNovaAbaPreview() {
     areaExibicao.style.display = 'flex';
 
     definirEstadoPreview(true);
-
-    // TODO: Lógica para voltar/parar + mudar botão de run
-    // TODO: Ao voltar/parar a execução, as estilizações devem voltar como estavam antes
-
 };
 
 export function fecharAbaPreview() {
@@ -114,13 +112,44 @@ export function fecharAbaPreview() {
 
     areaCodigo.style.pointerEvents = 'auto';
     areaCodigo.style.display = 'flex';
+    const abasArquivos = document.querySelector('.abas-arquivos');
+    const nomeUltimoArquivo = abasArquivos.lastChild.textContent.slice(0, -1);
+    areaCodigo.value = lerArquivo(nomeUltimoArquivo).conteudo;
 
-    const arquivoAtual = selecionarArquivoAtual();
-    areaCodigo.value = arquivoAtual.conteudo;
-
-    areaCodigoRenderizado.style.display = 'flex';
+    areaCodigoRenderizado.style.display = 'block';
 
     areaExibicao.style.display = 'none';
 
     definirEstadoPreview(false);
+};
+
+export function selecionarAbaPreview() {
+    if (!lerEstadoAtualPreview()) return;
+
+    const areaExibicao = document.getElementById('codigo-preview');
+    const areaCodigo = document.getElementById('codigo');
+    const areaCodigoRenderizado = document.getElementById('codigo-render');
+
+    areaCodigo.style.pointerEvents = 'none';
+    areaCodigo.style.display = 'none';
+    areaCodigo.value = '';
+
+    areaCodigoRenderizado.style.display = 'none';
+
+    areaExibicao.style.display = 'flex';
+};
+
+export function sairAbaPreview() {
+    if (!lerEstadoAtualPreview()) return;
+
+    const areaCodigo = document.getElementById('codigo');
+    const areaCodigoRenderizado = document.getElementById('codigo-render');
+    const areaExibicao = document.getElementById('codigo-preview');
+
+    areaCodigo.style.pointerEvents = 'auto';
+    areaCodigo.style.display = 'flex';
+
+    areaCodigoRenderizado.style.display = 'block';
+
+    areaExibicao.style.display = 'none';
 };
