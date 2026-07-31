@@ -16,12 +16,12 @@ export function renderizarArquivos() {
     };
 };
 
-export function criarArquivo(nomeArquivo) {
+export function criarArquivo(nomeArquivo, conteudo = '') {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     
     const novoArquivo = {
         nome: nomeArquivo,
-        conteudo: ''
+        conteudo: conteudo
     };
 
     arquivos.push(novoArquivo);

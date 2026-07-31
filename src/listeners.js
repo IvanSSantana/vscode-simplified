@@ -22,7 +22,7 @@ function criarNovoArquivoListener() {
         if (event.target.getAttribute("option") === "novo-arquivo") {
             inputModal.style.display = "flex";
             inputModal.showModal();
-        }
+        };
     });
 
     input.addEventListener("keydown", (event) => {
@@ -162,6 +162,7 @@ function rodarCodigoPreviewListener() {
     
     botaoPlay.addEventListener('click', () => {
         let codigo = document.getElementById('codigo');
+        
         salvarCodigoPreview(codigo.value);
         iframe.srcdoc = codigo.value; // Faz o parser do HTML
         
@@ -171,10 +172,52 @@ function rodarCodigoPreviewListener() {
             botaoPlay.firstElementChild.setAttribute('data-prefix', 'far');
             return;
         };
-
+        
         criarNovaAbaPreview();
         botaoPlay.firstElementChild.setAttribute('data-prefix', 'fas');
+        botaoPlay.firstElementChild.style.opacity = 1;
     });
+};
+
+function verificarRedirecionado() {
+    const redirecionadoNovoArquivo = sessionStorage.getItem("redirecionadoNovoArquivo") || false;
+    const redirecionadoImportarArquivo = sessionStorage.getItem("redirecionadoImportarArquivo") || false;
+    
+    if (!!redirecionadoNovoArquivo) {
+        const inputModal = document.getElementById("input-nome-arquivo");
+        inputModal.style.display = "flex";
+        inputModal.showModal();
+        
+        sessionStorage.removeItem('redirecionadoNovoArquivo');
+
+    } else if (!!redirecionadoImportarArquivo) {
+        const arquivoRedirecionado = JSON.parse(sessionStorage.getItem("arquivoRedirecionado"));
+           
+        const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
+        const abaArquivo = document.querySelector(".abas-arquivos");
+        
+        const arquivoHtml = document.createElement("span");
+        arquivoHtml.classList.add("arquivo");
+        arquivoHtml.textContent = arquivoRedirecionado.nome;
+        
+        const botaoFecharArquivo = document.createElement("button");
+        botaoFecharArquivo.textContent = "X";
+        botaoFecharArquivo.classList.add("botao-fechar-arquivo");
+        
+        arquivoHtml.appendChild(botaoFecharArquivo);
+        abaArquivo.appendChild(arquivoHtml);
+        
+        const conteudoArquivo = arquivoRedirecionado.conteudo;
+
+        criarArquivo(arquivoRedirecionado.nome, conteudoArquivo);
+        salvarArquivo(arquivoRedirecionado.nome, conteudoArquivo)
+
+        atualizarTextArea(htmlLexer.tokenizer(conteudoArquivo));
+        atualizarCodigoRenderizado(conteudoArquivo, htmlLexer);
+
+        sessionStorage.removeItem("arquivoRedirecionado");
+        sessionStorage.removeItem("redirecionadoImportarArquivo");
+    };    
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -190,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
     clicarForaInputNomeNovoArquivoListener();
     abrirArquivoListener();
     rodarCodigoPreviewListener();
+    verificarRedirecionado();
     
     const arquivoAtual = lerArquivoAtual();
     const codigoArquivoAtual = atualizarCodigoRenderizado(arquivoAtual.conteudo, htmlLexer);

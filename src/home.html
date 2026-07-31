@@ -10,31 +10,33 @@
 <body>
      <header>
         <img src="logo.svg" alt="Logo" class="Vlower">
-        <button id="arquivo">Arquivo</button>
-        <button id="editar">Editar</button>
-
-        <input type="text" value="nome-pasta">
     </header>
+
     <main>
-        <aside>
-            
-        </aside>
+        <aside></aside>
 
         <img src="img/titulo.svg" alt="titulo" class="logo">
 
         <section id="botoes">
-
-            <button id="novo-arquivo"> 
-                <span> Novo arquivo</span>
-                <i class="fa-regular fa-file" id="arquivo-icone" ></i>
+            <button>
+                <a id="novo-arquivo" href="index.html"> 
+                    <span>Novo arquivo</span>
+                    <i class="fa-regular fa-file"></i>
+                </a>
             </button>
             
             <button id="abrir-arquivo">
-                <span>Abrir arquivo</span>
-                <i class="fa-regular fa-folder" id="arquivo-icone" ></i>
+                <label for="input-arquivo">
+                    <span>Importar Arquivo</span>
+                    <i class="fa-regular fa-folder"></i>
+                </label>
+                
+                <input id="input-arquivo" type="file" accept=".html,.txt" hidden>
             </button>
+
         </section>
     </main>
-    
+
+    <script src="home.js"></script>
 </body>
 </html>
