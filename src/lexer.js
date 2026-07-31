@@ -13,6 +13,8 @@ export class htmlLexer {
    static tokenizer(input) {
       let tokens = [];
 
+      if (!input) return [];
+
       for (let i = 0; i < input.length; i++) {
          switch (input[i]) {
             case '<':

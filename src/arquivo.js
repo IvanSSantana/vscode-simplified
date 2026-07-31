@@ -80,6 +80,10 @@ export function definirEstadoPreview(rodando) {
     const estadoAtual = { rodandoPreview: rodando };
     localStorageDb[0] = (estadoAtual);
     localStorage.setItem("previewRodando", JSON.stringify(localStorageDb));
+
+    if (rodando === false) {
+        deletarCodigoPreview();
+    };
 };
 
 export function lerEstadoAtualPreview() {
@@ -113,4 +117,9 @@ export function deletarCodigoPreview() {
     const localStorageDb = JSON.parse(localStorage.getItem("codigoPreview")) || [];
     localStorageDb.pop();
     localStorage.setItem("codigoPreview", JSON.stringify(localStorageDb));
+};
+
+export function lerArquivos() {
+    const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
+    return arquivos;
 };

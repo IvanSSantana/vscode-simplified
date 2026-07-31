@@ -1,4 +1,4 @@
-import { criarArquivo, renderizarArquivos, removerArquivo, salvarArquivo, definirArquivoAtual, lerArquivoAtual, lerEstadoAtualPreview, definirEstadoPreview, salvarCodigoPreview, lerCodigoPreview, deletarCodigoPreview } from "./arquivo.js";
+import { criarArquivo, renderizarArquivos, removerArquivo, salvarArquivo, definirArquivoAtual, lerArquivoAtual, lerEstadoAtualPreview, definirEstadoPreview, salvarCodigoPreview, lerCodigoPreview, deletarCodigoPreview, lerArquivos, lerArquivo } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
 import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado, criarNovaAbaPreview, fecharAbaPreview, selecionarAbaPreview, sairAbaPreview } from "./utils.js";
@@ -43,10 +43,10 @@ function criarNovoArquivoListener() {
         inputModal.style.display = 'none';
     });
 
-}
+};
 
 function fecharAbaArquivoListener() {
-    const abasArquivos = document.querySelector(".abas-arquivos");
+    let abasArquivos = document.querySelector(".abas-arquivos");
 
    abasArquivos.addEventListener("click", (event) => {
         if (!event.target.classList.contains("botao-fechar-arquivo"))
@@ -57,15 +57,23 @@ function fecharAbaArquivoListener() {
         if (!!event.target.parentElement.classList.contains('preview')) {
             const botaoPlay = document.getElementById('play-codigo');
             fecharAbaPreview();
-            deletarCodigoPreview();
             botaoPlay.firstElementChild.setAttribute('data-prefix', 'far');
             return;
         };
 
         removerArquivo(nomeArquivo);
         event.target.parentElement.remove();
+
+        abasArquivos = document.querySelector(".abas-arquivos");
+
+        if (abasArquivos.childElementCount === 0) {
+            const deletarArquivoAtual = [];
+            const arquivoAtualParaStorage = localStorage.setItem("arquivoAtual", JSON.stringify(deletarArquivoAtual));
+            atualizarTextArea([]);
+            atualizarCodigoRenderizado('', htmlLexer);
+        };
     });
-}
+};
 
 function salvarArquivoListener() {
     let abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
@@ -104,7 +112,8 @@ function selecionarArquivoAbaListener() {
         };
 
         const nomeArquivo = event.target.textContent.slice(0, -1);
-        const arquivoClicado = definirArquivoAtual(nomeArquivo);
+        definirArquivoAtual(nomeArquivo);
+        const arquivoClicado = lerArquivoAtual(nomeArquivo);
         
         if (!arquivoClicado.conteudo) return;
 
@@ -168,11 +177,13 @@ function rodarCodigoPreviewListener() {
         
         if (!!lerEstadoAtualPreview()) {
             fecharAbaPreview();
-            deletarCodigoPreview();
             botaoPlay.firstElementChild.setAttribute('data-prefix', 'far');
             return;
         };
         
+        const arquivoAtual = lerArquivoAtual();
+        salvarArquivo(arquivoAtual.nome, codigo.value);
+
         criarNovaAbaPreview();
         botaoPlay.firstElementChild.setAttribute('data-prefix', 'fas');
         botaoPlay.firstElementChild.style.opacity = 1;
@@ -253,4 +264,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     atalhoNovoArquivo();
     atalhoSalvarArquivo();
+
+    const abasArquivos = document.querySelector(".abas-arquivos");
+    const arquivos = lerArquivos();
+    
+    if (arquivos.length === 0) {
+        areaCodigo.style.pointerEvents = 'none';
+    };
+
+    const observerAbaArquivos = new MutationObserver(() => {
+        areaCodigo.style.pointerEvents = abasArquivos.childElementCount === 0 ? "none" : "auto";
+    });
+    observerAbaArquivos.observe(abasArquivos, { childList: true });
 });
