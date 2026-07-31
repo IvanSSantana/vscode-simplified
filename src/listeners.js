@@ -231,6 +231,124 @@ function verificarRedirecionado() {
     };    
 };
 
+function clicarBotoesLateralListener() {
+    const abaLateral = document.getElementById('aba-lateral');
+
+    const observerBotaoArquivo = new MutationObserver(() => {
+        const botaoLateralArquivo = document.getElementById("botao-lateral-arquivo");
+
+        if (!botaoLateralArquivo || botaoLateralArquivo.tagName !== "svg") return;
+
+        observerBotaoArquivo.disconnect();
+
+        botaoLateralArquivo.addEventListener("click", () => {
+            if (abaLateral.style.display === 'none') {
+                abaLateral.style.display = 'block';
+                abaLateral.classList = 'aba-lateral';
+
+                let arquivos = lerArquivos();
+                arquivos.forEach(arquivoDb => {
+                    const arquivoHtml = document.createElement("span");
+                    arquivoHtml.classList = "arquivoAbaLateral";
+                    arquivoHtml.textContent = arquivoDb.nome;
+                    abaLateral.appendChild(arquivoHtml);
+                });
+
+            } else {
+                abaLateral.style.display = 'none';
+                abaLateral.replaceChildren();
+            };
+        });
+    });
+
+    const observerBotaoPesquisar = new MutationObserver(() => {
+        const botaoLateralPesquisar = document.getElementById("botao-lateral-pesquisa");
+
+        if (!botaoLateralPesquisar || botaoLateralPesquisar.tagName !== "svg") return;
+
+        observerBotaoPesquisar.disconnect();
+
+        botaoLateralPesquisar.addEventListener("click", () => {
+           if (abaLateral.style.display === 'none') {
+                abaLateral.style.display = 'block';
+                abaLateral.classList = 'aba-lateral';
+                const inputLocalizar = document.createElement('input');
+                inputLocalizar.classList = 'input-localizar'; 
+                inputLocalizar.placeholder = 'Localizar...'; 
+
+                const containerSubstituir = document.createElement('div');
+
+                const inputSubstituir = document.createElement('input');
+                inputSubstituir.classList = 'input-substituir';
+                inputSubstituir.placeholder = 'Substituir...';
+                
+                const botaoSubstituir = document.createElement('button');
+                botaoSubstituir.textContent = 'Substituir'
+
+                containerSubstituir.appendChild(inputSubstituir);
+                containerSubstituir.appendChild(botaoSubstituir);
+                
+                abaLateral.appendChild(inputLocalizar);
+                abaLateral.appendChild(containerSubstituir);    
+
+                const containerArquivos = document.createElement('div');
+                containerArquivos.classList = 'container-arquivos-aba-lateral';
+
+                const arquivo1 = document.createElement('div');
+                arquivo1.classList = 'arquivo-aba-pesquisar';
+                arquivo1.textContent = 'arquivo1.teste';
+                arquivo1.style.cursor = 'pointer';
+
+                const trecho1Arquivo1 = document.createElement('span');
+                trecho1Arquivo1.classList = 'trecho-codigo';
+                trecho1Arquivo1.textContent = 'alguma coisa...'
+                trecho1Arquivo1.style.display = 'none'
+                const trecho2Arquivo1 = document.createElement('span');
+                trecho2Arquivo1.classList = 'trecho-codigo';
+                trecho2Arquivo1.textContent = '...coisa alguma';
+                trecho2Arquivo1.style.display = 'none'
+
+                arquivo1.appendChild(trecho1Arquivo1);
+                arquivo1.appendChild(trecho2Arquivo1);
+                containerArquivos.appendChild(arquivo1);
+                abaLateral.appendChild(containerArquivos);
+
+            } else {
+                abaLateral.style.display = 'none';
+                abaLateral.replaceChildren();
+            };
+        });
+    });
+
+    observerBotaoArquivo.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+
+    observerBotaoPesquisar.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+};
+
+function clicarArquivoAbaLateralPesquisarListener() {
+    const abaLateral = document.getElementById("aba-lateral");
+
+    abaLateral.addEventListener("click", (event) => {
+        const arquivo = event.target.closest(".arquivo-aba-pesquisar");
+
+        if (!arquivo) return;
+
+        const trechos = [...arquivo.children];
+
+        const aberto = trechos[0]?.style.display === "block";
+
+        trechos.forEach(trecho => {
+            trecho.style.display = aberto ? "none" : "block";
+        });
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     renderizarArquivos();
     definirEstadoPreview(false);
@@ -245,6 +363,8 @@ document.addEventListener("DOMContentLoaded", () => {
     abrirArquivoListener();
     rodarCodigoPreviewListener();
     verificarRedirecionado();
+    clicarBotoesLateralListener();
+    clicarArquivoAbaLateralPesquisarListener();
     
     const arquivoAtual = lerArquivoAtual();
     const codigoArquivoAtual = atualizarCodigoRenderizado(arquivoAtual.conteudo, htmlLexer);

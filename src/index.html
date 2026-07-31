@@ -15,14 +15,19 @@
         <button id="arquivo">Arquivo</button>
         <button id="editar">Editar</button>
 
-        <input type="text" value="nome-pasta">
+        <input type="text" value="nome-arquivo">
     </header>
 
     <main>
         <aside>
-            <i class="fa-regular fa-file" title="TESTE"></i>
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <button id="play-codigo" style="color: white; background-color: transparent;"><i class="fa-regular fa-circle-play"></i></button>
+            <div class="botoes-aba-lateral">
+                <i class="fa-regular fa-file" id="botao-lateral-arquivo"></i>
+                <i class="fa-solid fa-magnifying-glass" id="botao-lateral-pesquisa"></i>
+                <button id="play-codigo" style="color: white; background-color: transparent;"><i class="fa-regular fa-circle-play"></i></button>
+            </div>
+
+            <!-- Não vai vir com essa classe por padrão. Virá com JS que removerá o 'display: none' também -->
+            <div id="aba-lateral" style="display: none"></div>
         </aside>
 
         <section class="area-codigo">
@@ -50,8 +55,6 @@
     <dialog id="opcoes-aba-editar" class="opcoes-aba" style="display: none;">
         <button option="novo-arquivo">Localizar</button>
         <button option="abrir-arquivo">Substituir</button>
-        <button option="salvar">Transformar Linha em Comentário</button>
-        <button option="fechar-arquivo">Transformar Bloco em Comentário</button>
     </dialog>
 
     <dialog id="input-nome-arquivo" style="display: none;">
