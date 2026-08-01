@@ -35,6 +35,7 @@
     height: 20%;
 
     margin: 10px;
+    transition: 1s;
 }
 
 .Vlowerzinho:active {
