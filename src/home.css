@@ -15,33 +15,60 @@
     overflow: hidden;
 }
 
-.logo{
+.titulo {
     display: flex;
-    width: 700px;
-    height: 500px;
-    margin-left: 40px;
-    margin: 40px;
     justify-content: center;
+    align-items: center;
+    
+    width: 40%;
+    height: 80%;
+    
+    margin: 10px;
+}
+
+.Vlowerzinho {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 20%;
+    height: 20%;
+
+    margin: 10px;
+}
+
+.Vlowerzinho:active {
+    transform: rotate(360deg);
+    transition: 1s;
 }
 
 body{
     background-color: var(--cor-dialog);
 }
 
-main{
+main {
     display: flex;
-    flex-wrap: nowrap;
+    flex-direction: row;     
+    justify-content: center; 
+    align-items: center;    
+    width: 100%;             
+    min-height: 80vh;       
 }
 
 header {
     background-color: var(--cor-secao);
     height: 1.75rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;  
 }
 
 main button {
     background-color: transparent;
     color: var(--cor-texto);
    
+
     margin: 0;          
     position: relative;
     overflow: hidden;
@@ -108,7 +135,7 @@ main {
     padding-left: 4px;
     cursor: pointer;
     height: 50px;
-    width: 90%;
+    width: 50%;
     font-size: 20px;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif  ;
     padding-left: 14px;
@@ -118,10 +145,13 @@ main {
 
 #botoes {
     display: flex;
-    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
     gap: 15px;
-    width: 300px;
+    width: 50%;
+    
     padding-right: 10px;
 }
 
