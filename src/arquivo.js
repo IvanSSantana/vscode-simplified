@@ -1,3 +1,6 @@
+import { htmlLexer } from "./lexer.js";
+import { tiposTokens } from "./utils.js";
+
 export function renderizarArquivos() {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     const abaArquivo = document.querySelector(".abas-arquivos");
@@ -18,18 +21,20 @@ export function renderizarArquivos() {
 
 export function criarArquivo(nomeArquivo, conteudo = '') {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
-    
+
     const novoArquivo = {
         nome: nomeArquivo,
         conteudo: conteudo
     };
-
-    arquivos.push(novoArquivo);
+    
+    if (!arquivos.some(arquivo => arquivo.nome === nomeArquivo)) {
+        arquivos.push(novoArquivo);
+    };
     const arquivosStorage = localStorage.setItem("arquivos", JSON.stringify(arquivos));
     
     const abaArquivo = document.querySelector(".abas-arquivos");
     abaArquivo.replaceChildren(); // Limpa a lista de arquivos antes de adicionar novamente
-
+    
     renderizarArquivos();
     definirArquivoAtual(nomeArquivo);
 
@@ -39,7 +44,7 @@ export function criarArquivo(nomeArquivo, conteudo = '') {
 export function removerArquivo(nomeArquivo) {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     const index = arquivos.findIndex(arquivo => arquivo.nome === nomeArquivo);
-    
+
     if (index !== -1) { // -1 é o retornado para quando não encontra o arquivo
         arquivos.splice(index, 1);
         localStorage.setItem("arquivos", JSON.stringify(arquivos));
@@ -71,8 +76,13 @@ export function definirArquivoAtual(nomeArquivo) {
 };
 
 export function lerArquivoAtual() {
-    const arquivoAtual = JSON.parse(localStorage.getItem("arquivoAtual")) || null;
-    return arquivoAtual ? arquivoAtual : null;
+    try {
+        const item = localStorage.getItem("arquivoAtual");
+        if (!item || item === "undefined") return null;
+        return JSON.parse(item) || null;
+    } catch (e) {
+        return null;
+    }
 };
 
 export function definirEstadoPreview(rodando) {
@@ -97,10 +107,6 @@ export function lerArquivo(nomeArquivo) {
     return arquivo || null;
 };
 
-export function filtrarArquivosPorTextoContido(texto) {
-
-};
-
 export function salvarCodigoPreview(codigoStr) {
     const localStorageDb = JSON.parse(localStorage.getItem("codigoPreview")) || [];
     const codigoPreview = { codigoPreview: codigoStr };
@@ -122,4 +128,58 @@ export function deletarCodigoPreview() {
 export function lerArquivos() {
     const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
     return arquivos;
+};
+
+export function filtrarArquivosPorTextoContido(textoBuscado) {
+    const arquivos = lerArquivos();
+
+    if (!arquivos) return [];
+
+    const arquivosFiltrados = [];
+
+    for (const arquivo of arquivos) {
+        const grupoTrechosArquivo = [];
+
+        const tokens = htmlLexer.tokenizer(arquivo.conteudo);
+
+        for (let i = 0; i < tokens.length; i++) {
+            const token = tokens[i];
+
+            if (!token.valor.toLowerCase().includes(textoBuscado.toLowerCase())) continue;
+
+            const indiceStrToken = token.valor.toLowerCase().indexOf(textoBuscado.toLowerCase());
+            const indiceGlobal = token.inicio + indiceStrToken;
+
+            // Procura o início do contexto (< ou </)
+            let inicioContexto = i;
+            while (inicioContexto > 0 &&
+                tokens[inicioContexto].tipo !== tiposTokens.TAG_ABERTURA &&
+                tokens[inicioContexto].tipo !== tiposTokens.TAG_FECHAMENTO
+            ) {
+                inicioContexto--;
+            };
+
+            // Procura o fim do contexto (> ou />)
+            let fimContexto = i;
+            while (fimContexto < tokens.length &&
+                tokens[fimContexto].tipo !== tiposTokens.TAG_CONCLUSAO_ABERTURA &&
+                tokens[fimContexto].tipo !== tiposTokens.TAG_CONCLUSAO_FECHAMENTO &&
+                tokens[fimContexto].tipo !== tiposTokens.TAG_AUTOFECHAMENTO
+            ) {
+                fimContexto++;
+            };
+
+            let contexto = "";
+
+            for (let j = inicioContexto; j <= fimContexto && j < tokens.length; j++) {
+                contexto += tokens[j].valor;
+            };
+
+            grupoTrechosArquivo.push({ arquivo: arquivo.nome, indice: indiceGlobal, indiceNoToken: indiceStrToken, token: { ...token }, contexto });
+        };
+
+        arquivosFiltrados.push(grupoTrechosArquivo)
+    };
+
+    return arquivosFiltrados;
 };

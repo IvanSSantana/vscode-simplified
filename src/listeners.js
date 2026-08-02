@@ -1,4 +1,4 @@
-import { criarArquivo, renderizarArquivos, removerArquivo, salvarArquivo, definirArquivoAtual, lerArquivoAtual, lerEstadoAtualPreview, definirEstadoPreview, salvarCodigoPreview, lerCodigoPreview, deletarCodigoPreview, lerArquivos, lerArquivo } from "./arquivo.js";
+import { criarArquivo, renderizarArquivos, removerArquivo, salvarArquivo, definirArquivoAtual, lerArquivoAtual, lerEstadoAtualPreview, definirEstadoPreview, salvarCodigoPreview, lerCodigoPreview, deletarCodigoPreview, lerArquivos, lerArquivo, filtrarArquivosPorTextoContido } from "./arquivo.js";
 import { htmlLexer } from "./lexer.js";
 import { atalhoNovoArquivo, atalhoSalvarArquivo } from "./atalhos.js";
 import { autoCompleteTag, atualizarTextArea, atualizarCodigoRenderizado, criarNovaAbaPreview, fecharAbaPreview, selecionarAbaPreview, sairAbaPreview } from "./utils.js";
@@ -26,8 +26,7 @@ function criarNovoArquivoListener() {
     });
 
     input.addEventListener("keydown", (event) => {
-        if (event.key === 'Escape')
-        {
+        if (event.key === 'Escape') {
             inputModal.close();
             inputModal.style.display = 'none';
         };
@@ -48,9 +47,9 @@ function criarNovoArquivoListener() {
 function fecharAbaArquivoListener() {
     let abasArquivos = document.querySelector(".abas-arquivos");
 
-   abasArquivos.addEventListener("click", (event) => {
+    abasArquivos.addEventListener("click", (event) => {
         if (!event.target.classList.contains("botao-fechar-arquivo"))
-            return; 
+            return;
 
         const nomeArquivo = event.target.parentElement.textContent.slice(0, -1);
 
@@ -61,7 +60,7 @@ function fecharAbaArquivoListener() {
             return;
         };
 
-        removerArquivo(nomeArquivo);
+        // removerArquivo(nomeArquivo);
         event.target.parentElement.remove();
 
         abasArquivos = document.querySelector(".abas-arquivos");
@@ -71,6 +70,12 @@ function fecharAbaArquivoListener() {
             const arquivoAtualParaStorage = localStorage.setItem("arquivoAtual", JSON.stringify(deletarArquivoAtual));
             atualizarTextArea([]);
             atualizarCodigoRenderizado('', htmlLexer);
+        };
+
+        const abaLateral = document.getElementById('aba-lateral');
+        const inputLocalizar = document.querySelector('.input-localizar');
+        if (abaLateral.style.display !== 'none' && !!inputLocalizar) {
+            renderizarResultadosPesquisa(inputLocalizar.value);
         };
     });
 };
@@ -85,10 +90,10 @@ function salvarArquivoListener() {
             if (option === "salvar") {
                 const nomeArquivo = JSON.parse(localStorage.getItem("arquivoAtual"))?.nome || [];
                 const conteudoArquivo = document.querySelector(".area-codigo textarea").value;
-                salvarArquivo(nomeArquivo, conteudoArquivo);  
+                salvarArquivo(nomeArquivo, conteudoArquivo);
             };
         });
-    };   
+    };
 };
 
 function selecionarArquivoAbaListener() {
@@ -103,7 +108,7 @@ function selecionarArquivoAbaListener() {
             iframe.srcdoc = codigo; // Faz o parser do HTML
             return;
         };
-        
+
         if (!event.target.classList.contains("arquivo"))
             return;
 
@@ -112,22 +117,19 @@ function selecionarArquivoAbaListener() {
         };
 
         const nomeArquivo = event.target.textContent.slice(0, -1);
-        definirArquivoAtual(nomeArquivo);
-        const arquivoClicado = lerArquivoAtual(nomeArquivo);
-        
-        if (!arquivoClicado.conteudo) return;
+        const novoArquivoAtual = definirArquivoAtual(nomeArquivo);
 
-        atualizarTextArea(htmlLexer.tokenizer(arquivoClicado.conteudo));
-        atualizarCodigoRenderizado(arquivoClicado.conteudo, htmlLexer);
+        atualizarTextArea(htmlLexer.tokenizer(novoArquivoAtual.conteudo));
+        atualizarCodigoRenderizado(novoArquivoAtual.conteudo, htmlLexer);
     });
 };
 
-function clicarForaOpcoesArquivoListener(){
-    document.addEventListener("click", function(e) {
+function clicarForaOpcoesArquivoListener() {
+    document.addEventListener("click", function (e) {
         const abaOpcoesArquivo = document.getElementById("opcoes-aba-arquivo");
         const listaIdsIgnorar = ['opcoes-aba-arquivo', 'arquivo'];
 
-        if(!listaIdsIgnorar.includes(e.target.id)){
+        if (!listaIdsIgnorar.includes(e.target.id)) {
             abaOpcoesArquivo.style.display = "none";
             abaOpcoesArquivo.close();
         };
@@ -155,8 +157,8 @@ function abrirArquivoListener() {
         if (!arquivo) return;
 
         const leitor = new FileReader();
-        
-        leitor.onload = function(eventoLeitor) {
+
+        leitor.onload = function (eventoLeitor) {
             conteudoArquivo = eventoLeitor.target.result;
             atualizarTextArea(htmlLexer.tokenizer(conteudoArquivo));
             atualizarCodigoRenderizado(conteudoArquivo, htmlLexer);
@@ -168,19 +170,19 @@ function abrirArquivoListener() {
 function rodarCodigoPreviewListener() {
     const botaoPlay = document.getElementById('play-codigo');
     const iframe = document.getElementById("codigo-preview");
-    
+
     botaoPlay.addEventListener('click', () => {
         let codigo = document.getElementById('codigo');
-        
+
         salvarCodigoPreview(codigo.value);
         iframe.srcdoc = codigo.value; // Faz o parser do HTML
-        
+
         if (!!lerEstadoAtualPreview()) {
             fecharAbaPreview();
             botaoPlay.firstElementChild.setAttribute('data-prefix', 'far');
             return;
         };
-        
+
         const arquivoAtual = lerArquivoAtual();
         salvarArquivo(arquivoAtual.nome, codigo.value);
 
@@ -193,31 +195,31 @@ function rodarCodigoPreviewListener() {
 function verificarRedirecionado() {
     const redirecionadoNovoArquivo = sessionStorage.getItem("redirecionadoNovoArquivo") || false;
     const redirecionadoImportarArquivo = sessionStorage.getItem("redirecionadoImportarArquivo") || false;
-    
+
     if (!!redirecionadoNovoArquivo) {
         const inputModal = document.getElementById("input-nome-arquivo");
         inputModal.style.display = "flex";
         inputModal.showModal();
-        
+
         sessionStorage.removeItem('redirecionadoNovoArquivo');
 
     } else if (!!redirecionadoImportarArquivo) {
         const arquivoRedirecionado = JSON.parse(sessionStorage.getItem("arquivoRedirecionado"));
-           
+
         const arquivos = JSON.parse(localStorage.getItem("arquivos")) || [];
         const abaArquivo = document.querySelector(".abas-arquivos");
-        
+
         const arquivoHtml = document.createElement("span");
         arquivoHtml.classList.add("arquivo");
         arquivoHtml.textContent = arquivoRedirecionado.nome;
-        
+
         const botaoFecharArquivo = document.createElement("button");
         botaoFecharArquivo.textContent = "X";
         botaoFecharArquivo.classList.add("botao-fechar-arquivo");
-        
+
         arquivoHtml.appendChild(botaoFecharArquivo);
         abaArquivo.appendChild(arquivoHtml);
-        
+
         const conteudoArquivo = arquivoRedirecionado.conteudo;
 
         criarArquivo(arquivoRedirecionado.nome, conteudoArquivo);
@@ -228,7 +230,7 @@ function verificarRedirecionado() {
 
         sessionStorage.removeItem("arquivoRedirecionado");
         sessionStorage.removeItem("redirecionadoImportarArquivo");
-    };    
+    };
 };
 
 function clicarBotoesLateralListener() {
@@ -269,48 +271,31 @@ function clicarBotoesLateralListener() {
         observerBotaoPesquisar.disconnect();
 
         botaoLateralPesquisar.addEventListener("click", () => {
-           if (abaLateral.style.display === 'none') {
+            if (abaLateral.style.display === 'none') {
                 abaLateral.style.display = 'block';
                 abaLateral.classList = 'aba-lateral';
                 const inputLocalizar = document.createElement('input');
-                inputLocalizar.classList = 'input-localizar'; 
-                inputLocalizar.placeholder = 'Localizar...'; 
+                inputLocalizar.classList = 'input-localizar';
+                inputLocalizar.placeholder = 'Localizar...';
 
                 const containerSubstituir = document.createElement('div');
 
                 const inputSubstituir = document.createElement('input');
                 inputSubstituir.classList = 'input-substituir';
                 inputSubstituir.placeholder = 'Substituir...';
-                
+
                 const botaoSubstituir = document.createElement('button');
+                botaoSubstituir.id = 'botao-substituir-lateral';
                 botaoSubstituir.textContent = 'Substituir'
 
                 containerSubstituir.appendChild(inputSubstituir);
                 containerSubstituir.appendChild(botaoSubstituir);
-                
+
                 abaLateral.appendChild(inputLocalizar);
-                abaLateral.appendChild(containerSubstituir);    
+                abaLateral.appendChild(containerSubstituir);
 
                 const containerArquivos = document.createElement('div');
                 containerArquivos.classList = 'container-arquivos-aba-lateral';
-
-                const arquivo1 = document.createElement('div');
-                arquivo1.classList = 'arquivo-aba-pesquisar';
-                arquivo1.textContent = 'arquivo1.teste';
-                arquivo1.style.cursor = 'pointer';
-
-                const trecho1Arquivo1 = document.createElement('span');
-                trecho1Arquivo1.classList = 'trecho-codigo';
-                trecho1Arquivo1.textContent = 'alguma coisa...'
-                trecho1Arquivo1.style.display = 'none'
-                const trecho2Arquivo1 = document.createElement('span');
-                trecho2Arquivo1.classList = 'trecho-codigo';
-                trecho2Arquivo1.textContent = '...coisa alguma';
-                trecho2Arquivo1.style.display = 'none'
-
-                arquivo1.appendChild(trecho1Arquivo1);
-                arquivo1.appendChild(trecho2Arquivo1);
-                containerArquivos.appendChild(arquivo1);
                 abaLateral.appendChild(containerArquivos);
 
             } else {
@@ -331,6 +316,141 @@ function clicarBotoesLateralListener() {
     });
 };
 
+function digitarNoLocalizarListener() {
+    const abaLateral = document.getElementById('aba-lateral');
+    let timeoutPesquisa;
+
+    abaLateral.addEventListener("input", (event) => {
+        if (event.target.classList.contains("input-localizar")) {
+            clearTimeout(timeoutPesquisa);
+
+            timeoutPesquisa = setTimeout(() => {
+                const texto = event.target.value;
+                renderizarResultadosPesquisa(texto);
+            }, 700);
+        }
+    });
+};
+
+function substituirTextoListener() {
+    const abaLateral = document.getElementById('aba-lateral');
+
+    abaLateral.addEventListener('click', (event) => {
+        if (event.target.id === 'botao-substituir-lateral') {
+            const inputLocalizar = document.querySelector('.input-localizar');
+            const inputSubstituir = document.querySelector('.input-substituir');
+
+            if (!inputLocalizar || !inputSubstituir) return;
+
+            const textoBuscado = inputLocalizar.value;
+            const textoSubstituto = inputSubstituir.value;
+
+            if (!textoBuscado) return;
+
+            const arquivos = lerArquivos();
+            const arquivoAtual = lerArquivoAtual();
+            let arquivoAtualAlterado = false;
+            let arquivoAtualConteudoAtualizado = '';
+
+            arquivos.forEach(arquivo => {
+                let conteudoArquivo = arquivo.conteudo;
+
+                if (!!conteudoArquivo && conteudoArquivo.includes(textoBuscado)) {
+                    conteudoArquivo = arquivo.conteudo.replaceAll(textoBuscado, textoSubstituto);
+                    salvarArquivo(arquivo.nome, conteudoArquivo);
+                    
+                    if (!!arquivoAtual && arquivoAtual.nome === arquivo.nome) {
+                        arquivoAtualConteudoAtualizado = conteudoArquivo;
+                        arquivoAtualAlterado = true;
+                    };
+                };
+            });
+            
+            if (!!arquivoAtualAlterado) {
+                const arquivoAtualizado = lerArquivoAtual();
+
+                atualizarTextArea(htmlLexer.tokenizer(arquivoAtualizado.conteudoArquivo));
+                atualizarCodigoRenderizado(arquivoAtualizado.conteudoArquivo, htmlLexer);
+            };
+
+            renderizarResultadosPesquisa(inputLocalizar.value);
+        };
+    });
+};
+
+function renderizarResultadosPesquisa(texto) {
+    const container = document.querySelector(".container-arquivos-aba-lateral");
+    if (!container) return;
+    container.replaceChildren();
+    if (!texto.trim()) return;
+
+    const arquivosFiltrados = filtrarArquivosPorTextoContido(texto);
+    if (!arquivosFiltrados) return;
+    
+    for (const arquivo of arquivosFiltrados) {
+        const divArquivo = document.createElement("div");
+        divArquivo.className = "arquivo-aba-pesquisar";
+        divArquivo.textContent = arquivo[0] ? arquivo[0].arquivo : '';
+        divArquivo.style.cursor = "pointer";
+
+        arquivo.forEach(trecho => {
+            const trechoHtml = document.createElement("span");
+            trechoHtml.innerHTML = destacarTrecho(trecho.contexto, texto);
+            trechoHtml.className = "trecho-codigo";
+            trechoHtml.style.display = "none";
+
+            trechoHtml.dataset.arquivo = trecho.arquivo;
+            trechoHtml.dataset.indiceTextArea = trecho.indice;
+
+            divArquivo.appendChild(trechoHtml);
+        });
+        
+        container.appendChild(divArquivo);
+    };
+};
+
+function destacarTrecho(contexto, texto) {
+    if (!contexto || !texto) return;
+
+    const indiceInicioTrecho = contexto.toLowerCase().indexOf(texto.toLowerCase());
+
+    const antes = contexto.slice(0, indiceInicioTrecho);
+    const destaque = contexto.slice(indiceInicioTrecho, indiceInicioTrecho + texto.length);
+    const depois = contexto.slice(indiceInicioTrecho + texto.length);
+
+    return antes + "<mark>" + destaque + "</mark>" + depois;
+};
+
+function clicarTrechoPesquisadoListener() {
+    document.addEventListener("click", (event) => {
+        const trecho = event.target.closest(".trecho-codigo");
+        if (!trecho) return;
+
+        abrirResultadoPesquisa(trecho.dataset.arquivo, trecho.dataset.indiceTextArea);
+    });
+};
+
+function abrirResultadoPesquisa(nomeArquivo, indiceTextArea) {
+    const arquivo = definirArquivoAtual(nomeArquivo);
+    const arquivosDb = lerArquivos();
+
+    if (!arquivosDb.some(arquivo => arquivo.nome === nomeArquivo)) {
+        criarArquivo(nomeArquivo, arquivo.conteudo);
+    };
+
+    atualizarTextArea(htmlLexer.tokenizer(arquivo.conteudo));
+    atualizarCodigoRenderizado(arquivo.conteudo, htmlLexer);
+
+    const textarea = document.getElementById("codigo");
+    textarea.focus();
+    textarea.setSelectionRange(indiceTextArea, indiceTextArea);
+
+    const textoAntes = textarea.value.slice(0, indiceTextArea);
+    const linha = textoAntes.split("\n").length - 1;
+    const alturaLinha = 18; 
+    textarea.scrollTop = linha * alturaLinha;
+};
+
 function clicarArquivoAbaLateralPesquisarListener() {
     const abaLateral = document.getElementById("aba-lateral");
 
@@ -347,7 +467,32 @@ function clicarArquivoAbaLateralPesquisarListener() {
             trecho.style.display = aberto ? "none" : "block";
         });
     });
-}
+};
+
+function clicarArquivoAbaLateralListener() {
+    const abaLateral = document.getElementById("aba-lateral");
+
+    abaLateral.addEventListener("click", (event) => {
+        const arquivoHtml = event.target.closest(".arquivoAbaLateral");
+        if (!arquivoHtml) return;
+
+        const nomeArquivo = arquivoHtml.textContent.trim();
+        
+        const abasSuperiores = document.querySelectorAll(".abas-arquivos .arquivo");
+        
+        const abaJaExiste = [...abasSuperiores].some(aba =>
+            aba.firstChild.textContent.trim() === nomeArquivo
+        );
+
+        if (!abaJaExiste) {
+            criarArquivo(nomeArquivo);
+        };
+
+        const arquivo = definirArquivoAtual(nomeArquivo);
+        atualizarTextArea(htmlLexer.tokenizer(arquivo.conteudo));
+        atualizarCodigoRenderizado(arquivo.conteudo, htmlLexer);
+    });
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     renderizarArquivos();
@@ -365,10 +510,17 @@ document.addEventListener("DOMContentLoaded", () => {
     verificarRedirecionado();
     clicarBotoesLateralListener();
     clicarArquivoAbaLateralPesquisarListener();
-    
+    digitarNoLocalizarListener();
+    substituirTextoListener();
+    clicarTrechoPesquisadoListener();
+    clicarArquivoAbaLateralListener();
+
     const arquivoAtual = lerArquivoAtual();
-    const codigoArquivoAtual = atualizarCodigoRenderizado(arquivoAtual.conteudo, htmlLexer);
     
+    if (!!arquivoAtual) {
+        const codigoArquivoAtual = atualizarCodigoRenderizado(arquivoAtual.conteudo, htmlLexer);
+    };
+
     const areaCodigo = document.getElementById("codigo");
     const areaRenderizacao = document.getElementById("codigo-render");
 
@@ -387,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const abasArquivos = document.querySelector(".abas-arquivos");
     const arquivos = lerArquivos();
-    
+
     if (arquivos.length === 0) {
         areaCodigo.style.pointerEvents = 'none';
     };

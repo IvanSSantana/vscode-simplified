@@ -151,7 +151,7 @@ aside {
     padding: 8px;
 }
 
-#aba-lateral button{
+#botao-substituir-lateral{
     background-color: var(--cor-barradepesquisa);
     color: var(--cor-texto);
     height: 6%;
@@ -164,7 +164,7 @@ aside {
     transition: all 0.3s ease;
 }
 
-#aba-lateral button:hover{
+#botao-substituir-lateral:hover{
     background-color: #f1c13c;
 }
 
