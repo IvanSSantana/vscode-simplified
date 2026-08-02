@@ -49,6 +49,11 @@ export function removerArquivo(nomeArquivo) {
         arquivos.splice(index, 1);
         localStorage.setItem("arquivos", JSON.stringify(arquivos));
     };
+
+    const arquivoAtual = lerArquivoAtual();
+    if (arquivoAtual && arquivoAtual.nome === nomeArquivo) {
+        localStorage.removeItem("arquivoAtual");
+    };
 };
 
 export function salvarArquivo(nomeArquivo, conteudoArquivo) {

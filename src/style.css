@@ -113,7 +113,9 @@ aside {
     width: 17vw;
     background-color: var(--cor-secao-de-abas);
     display: flex;
-    
+    flex-direction: column;
+    overflow-y: auto;
+    word-break: break-word;
 }   
 
 
@@ -170,37 +172,122 @@ aside {
 
 .arquivoAbaLateral {
     width: 93%;
-    height: 4%;
+    min-height: 28px;
     display: inline-flex;
     margin-left: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
     background-color: var(--cor-barradepesquisa);
-    border-radius: 2px;
-    padding-left: 2px;
-    align-items:  center;
+    border-radius: 4px;
+    padding: 2px 6px;
+    align-items: center;
+    justify-content: space-between;
     box-shadow: 4px 4px var(--cor-secao);
     transition: all 0.2s ease-in-out;
+    cursor: pointer;
 }
 
-.arquivo-aba-pesquisar{
-    display: inline flex;
-    margin-left: 3px;
-    margin-top: 6px;
+.nome-arquivo-lateral {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-grow: 1;
+    margin-right: 5px;
 }
 
-.trecho-codigo{
-    display: inline flex;
+.botao-deletar-arquivo-lateral {
+    background-color: transparent;
+    color: var(--cor-texto);
+    border: none;
+    cursor: pointer;
+    padding: 3px 6px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+    display: flex;
     align-items: center;
-    margin-left: 3px;
-    margin-top: 3px;
+    justify-content: center;
 }
 
-.arquivoAbaLateral:hover {
-    width: 93%;
-    display: inline-flex;
+.botao-deletar-arquivo-lateral:hover {
+    opacity: 1;
+    background-color: #d9534f;
+    color: #ffffff;
+}
+
+.container-arquivos-aba-lateral {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.arquivo-aba-pesquisar {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--cor-barradepesquisa);
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    word-break: break-word;
+    white-space: normal;
+    box-shadow: 2px 2px var(--cor-secao);
+    transition: background-color 0.2s ease;
+}
+
+.arquivo-aba-pesquisar:hover {
+    background-color: #d89002;
+}
+
+.titulo-arquivo-pesquisa {
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ffffff;
+    word-break: break-word;
+}
+
+.trecho-codigo {
+    display: block;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-left: 3px solid #f1c13c;
+    margin-top: 5px;
+    padding: 5px 8px;
+    font-family: Consolas, monospace;
+    font-size: 0.82rem;
+    color: #e0e0e0;
+    border-radius: 3px;
+    word-break: break-all;
+    white-space: pre-wrap;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.trecho-codigo * {
+    font-size: 0.82rem;
+    font-weight: normal;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.trecho-codigo:hover {
+    background-color: rgba(241, 193, 60, 0.35);
+    color: #ffffff;
+}
+
+.trecho-codigo mark {
     background-color: #f1c13c;
-    
+    color: #000000;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 3px;
+    display: inline;
 }
 
 .botoes-aba-lateral {

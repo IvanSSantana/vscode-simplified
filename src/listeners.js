@@ -251,8 +251,19 @@ function clicarBotoesLateralListener() {
                 let arquivos = lerArquivos();
                 arquivos.forEach(arquivoDb => {
                     const arquivoHtml = document.createElement("span");
-                    arquivoHtml.classList = "arquivoAbaLateral";
-                    arquivoHtml.textContent = arquivoDb.nome;
+                    arquivoHtml.classList.add("arquivoAbaLateral");
+
+                    const nomeSpan = document.createElement("span");
+                    nomeSpan.classList.add("nome-arquivo-lateral");
+                    nomeSpan.textContent = arquivoDb.nome;
+
+                    const botaoDeletar = document.createElement("button");
+                    botaoDeletar.classList.add("botao-deletar-arquivo-lateral");
+                    botaoDeletar.title = "Deletar arquivo";
+                    botaoDeletar.innerHTML = '<i class="fa-solid fa-trash"></i>';
+
+                    arquivoHtml.appendChild(nomeSpan);
+                    arquivoHtml.appendChild(botaoDeletar);
                     abaLateral.appendChild(arquivoHtml);
                 });
 
@@ -367,16 +378,40 @@ function substituirTextoListener() {
             });
             
             if (!!arquivoAtualAlterado) {
-                const arquivoAtualizado = lerArquivoAtual();
+                const arquivoAtualizado = definirArquivoAtual(arquivoAtual.nome);
 
-                atualizarTextArea(htmlLexer.tokenizer(arquivoAtualizado.conteudoArquivo));
-                atualizarCodigoRenderizado(arquivoAtualizado.conteudoArquivo, htmlLexer);
+                atualizarTextArea(htmlLexer.tokenizer(arquivoAtualizado.conteudo));
+                atualizarCodigoRenderizado(arquivoAtualizado.conteudo, htmlLexer);
             };
 
             renderizarResultadosPesquisa(inputLocalizar.value);
         };
     });
 };
+
+export function abrirAbaSuperior(nomeArquivo) {
+    const abaArquivo = document.querySelector(".abas-arquivos");
+    if (!abaArquivo) return;
+
+    const abasExistentes = abaArquivo.querySelectorAll(".arquivo");
+    const jaExiste = [...abasExistentes].some(aba => {
+        const nomeAba = aba.childNodes[0]?.textContent?.trim() || aba.textContent.slice(0, -1).trim();
+        return nomeAba === nomeArquivo;
+    });
+
+    if (!jaExiste) {
+        const arquivoHtml = document.createElement("span");
+        arquivoHtml.classList.add("arquivo");
+        arquivoHtml.textContent = nomeArquivo;
+
+        const botaoFecharArquivo = document.createElement("button");
+        botaoFecharArquivo.textContent = "X";
+        botaoFecharArquivo.classList.add("botao-fechar-arquivo");
+
+        arquivoHtml.appendChild(botaoFecharArquivo);
+        abaArquivo.appendChild(arquivoHtml);
+    }
+}
 
 function renderizarResultadosPesquisa(texto) {
     const container = document.querySelector(".container-arquivos-aba-lateral");
@@ -388,13 +423,19 @@ function renderizarResultadosPesquisa(texto) {
     if (!arquivosFiltrados) return;
     
     for (const arquivo of arquivosFiltrados) {
+        if (!arquivo || arquivo.length === 0) continue;
+
         const divArquivo = document.createElement("div");
         divArquivo.className = "arquivo-aba-pesquisar";
-        divArquivo.textContent = arquivo[0] ? arquivo[0].arquivo : '';
-        divArquivo.style.cursor = "pointer";
+
+        const tituloArquivo = document.createElement("div");
+        tituloArquivo.className = "titulo-arquivo-pesquisa";
+        tituloArquivo.innerHTML = `<i class="fa-regular fa-file-code"></i> <span>${arquivo[0].arquivo}</span>`;
+
+        divArquivo.appendChild(tituloArquivo);
 
         arquivo.forEach(trecho => {
-            const trechoHtml = document.createElement("span");
+            const trechoHtml = document.createElement("div");
             trechoHtml.innerHTML = destacarTrecho(trecho.contexto, texto);
             trechoHtml.className = "trecho-codigo";
             trechoHtml.style.display = "none";
@@ -412,11 +453,15 @@ function renderizarResultadosPesquisa(texto) {
 function destacarTrecho(contexto, texto) {
     if (!contexto || !texto) return;
 
-    const indiceInicioTrecho = contexto.toLowerCase().indexOf(texto.toLowerCase());
+    // Substitui tags de cabeçalho (h1-h6) por p para padronizar a exibição
+    const contextoPadronizado = contexto.replace(/<\/?h[1-6]/gi, match => match.startsWith('</') ? '</p' : '<p');
 
-    const antes = contexto.slice(0, indiceInicioTrecho);
-    const destaque = contexto.slice(indiceInicioTrecho, indiceInicioTrecho + texto.length);
-    const depois = contexto.slice(indiceInicioTrecho + texto.length);
+    const indiceInicioTrecho = contextoPadronizado.toLowerCase().indexOf(texto.toLowerCase());
+    if (indiceInicioTrecho === -1) return contextoPadronizado;
+
+    const antes = contextoPadronizado.slice(0, indiceInicioTrecho);
+    const destaque = contextoPadronizado.slice(indiceInicioTrecho, indiceInicioTrecho + texto.length);
+    const depois = contextoPadronizado.slice(indiceInicioTrecho + texto.length);
 
     return antes + "<mark>" + destaque + "</mark>" + depois;
 };
@@ -431,6 +476,7 @@ function clicarTrechoPesquisadoListener() {
 };
 
 function abrirResultadoPesquisa(nomeArquivo, indiceTextArea) {
+    abrirAbaSuperior(nomeArquivo);
     const arquivo = definirArquivoAtual(nomeArquivo);
     const arquivosDb = lerArquivos();
 
@@ -455,13 +501,15 @@ function clicarArquivoAbaLateralPesquisarListener() {
     const abaLateral = document.getElementById("aba-lateral");
 
     abaLateral.addEventListener("click", (event) => {
-        const arquivo = event.target.closest(".arquivo-aba-pesquisar");
+        if (event.target.closest(".trecho-codigo")) return;
 
+        const arquivo = event.target.closest(".arquivo-aba-pesquisar");
         if (!arquivo) return;
 
-        const trechos = [...arquivo.children];
+        const trechos = arquivo.querySelectorAll(".trecho-codigo");
+        if (trechos.length === 0) return;
 
-        const aberto = trechos[0]?.style.display === "block";
+        const aberto = trechos[0].style.display === "block";
 
         trechos.forEach(trecho => {
             trecho.style.display = aberto ? "none" : "block";
@@ -473,20 +521,57 @@ function clicarArquivoAbaLateralListener() {
     const abaLateral = document.getElementById("aba-lateral");
 
     abaLateral.addEventListener("click", (event) => {
+        const botaoDeletar = event.target.closest(".botao-deletar-arquivo-lateral");
+
+        if (botaoDeletar) {
+            event.stopPropagation();
+            const arquivoHtml = event.target.closest(".arquivoAbaLateral");
+            if (!arquivoHtml) return;
+
+            const nomeSpan = arquivoHtml.querySelector(".nome-arquivo-lateral");
+            const nomeArquivo = nomeSpan ? nomeSpan.textContent.trim() : arquivoHtml.textContent.trim();
+
+            removerArquivo(nomeArquivo);
+            arquivoHtml.remove();
+
+            // Remover das abas superiores se estiver aberto
+            const abasSuperiores = document.querySelectorAll(".abas-arquivos .arquivo");
+            abasSuperiores.forEach(aba => {
+                const nomeAba = aba.childNodes[0]?.textContent?.trim() || aba.textContent.slice(0, -1).trim();
+                if (nomeAba === nomeArquivo) {
+                    aba.remove();
+                }
+            });
+
+            const abasArquivos = document.querySelector(".abas-arquivos");
+            if (abasArquivos && abasArquivos.childElementCount === 0) {
+                atualizarTextArea([]);
+                atualizarCodigoRenderizado('', htmlLexer);
+            } else {
+                const arquivoAtual = lerArquivoAtual();
+                if (!arquivoAtual) {
+                    const arquivosRestantes = lerArquivos();
+                    if (arquivosRestantes.length > 0) {
+                        const ultimoArquivo = arquivosRestantes[arquivosRestantes.length - 1];
+                        const novoAtual = definirArquivoAtual(ultimoArquivo.nome);
+                        atualizarTextArea(htmlLexer.tokenizer(novoAtual.conteudo));
+                        atualizarCodigoRenderizado(novoAtual.conteudo, htmlLexer);
+                    } else {
+                        atualizarTextArea([]);
+                        atualizarCodigoRenderizado('', htmlLexer);
+                    }
+                }
+            }
+            return;
+        }
+
         const arquivoHtml = event.target.closest(".arquivoAbaLateral");
         if (!arquivoHtml) return;
 
-        const nomeArquivo = arquivoHtml.textContent.trim();
+        const nomeSpan = arquivoHtml.querySelector(".nome-arquivo-lateral");
+        const nomeArquivo = nomeSpan ? nomeSpan.textContent.trim() : arquivoHtml.textContent.trim();
         
-        const abasSuperiores = document.querySelectorAll(".abas-arquivos .arquivo");
-        
-        const abaJaExiste = [...abasSuperiores].some(aba =>
-            aba.firstChild.textContent.trim() === nomeArquivo
-        );
-
-        if (!abaJaExiste) {
-            criarArquivo(nomeArquivo);
-        };
+        abrirAbaSuperior(nomeArquivo);
 
         const arquivo = definirArquivoAtual(nomeArquivo);
         atualizarTextArea(htmlLexer.tokenizer(arquivo.conteudo));
